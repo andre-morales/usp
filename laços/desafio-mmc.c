@@ -5,10 +5,10 @@ int calculaMMC(int x, int y) {
 	int fator = 1;
 	printf("1");
 	
-	// Enquanto os dois numeros forem maiores que 1, continuamos fatorando.
+	// Enquanto os dois números forem maiores que 1, continuamos fatorando.
 	while (x > 1 || y > 1) {
 		
-		// Procurando um divisor que divida pelo menos um dos numeros
+		// Procurando um divisor que divida pelo menos um dos números		
 		for (int d = 2; ; d++) {
 			if (x % d == 0 || y % d == 0) {
 				
