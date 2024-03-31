@@ -1,2 +1,2 @@
-# Exercícios da Aula de Introdução a Programação - EACH USP
+# Exercícios de Programação da USP
 Atividades em aula e exercícios realizados em aula
