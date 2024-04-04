@@ -2,9 +2,14 @@
 #include <stdio.h>
 
 bool inicializaGrafo(Grafo* g, int v) {
-	// Teste de sanidade
+	// Testes de sanidade
+	if (g == NULL) {
+		fprintf(stderr, "ERRO: inicializaGrafo()\n");
+		fprintf(stderr, "  Grafo não pode ser nulo.")
+		return false;
+	}
 	if (v <= 0 || v > MAXNUMVERTICES) {
-		fprintf(stderr, "Inicialização do Grafo falhou:\n");
+		fprintf(stderr, "ERRO: inicializaGrafo()\n");
 		fprintf(stderr, "  O número de vértices especificado [%i] está fora do limite permitido. 0 < v < %i\n", v, MAXNUMVERTICES);
 		return false;
 	}
