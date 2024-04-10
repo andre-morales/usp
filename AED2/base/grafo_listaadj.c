@@ -35,3 +35,7 @@ bool listaAdjVazia(Grafo* gr, int v) {
 	Aresta* lista = gr->listaAdj[v];
 	return !lista;
 }
+
+Apontador proxListaAdj(Grafo*, int v, Apontador atual) {
+	
+}

@@ -8,6 +8,8 @@ typedef struct aresta {
 	struct aresta* prox;
 } Aresta;
 
+typedef Aresta* Apontador;
+
 typedef struct {
 	Aresta** listaAdj;
 	int numVertices;
@@ -20,3 +22,4 @@ void imprimeGrafo(Grafo*);
 
 bool listaAdjVazia(Grafo*, int);
 
+Apontador proxListaAdj(Grafo*, int v, Apontador atual);

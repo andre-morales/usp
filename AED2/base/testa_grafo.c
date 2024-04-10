@@ -13,11 +13,11 @@ void main() {
 	insereAresta(&g, 1, 9, 1);
 
 	printf("Adjacentes de V: ");
-	int V = 1;
-	int vert = -1;
+	Apontador V = 1;
+	Apontador vert = -1;
 	while((vert = proxListaAdj(&g, V, vert)) != -1) {
 		printf("%i ", vert);
-		pause();
+		//pause();
 	}
 	printf("\n");	
 

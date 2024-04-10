@@ -6,6 +6,7 @@
 #define VERTICE_INVALIDO -1
 
 typedef int Peso;
+typedef int Apontador;
 typedef struct {
 	Peso mat[MAXNUMVERTICES][MAXNUMVERTICES];
 	int numVertices;
@@ -30,7 +31,7 @@ bool existeAresta(Grafo*, int, int);
 
 bool removeAresta(Grafo*, int, int, Peso*);
 
-int proxListaAdj(Grafo* g, int v, int atual);
+Apontador proxListaAdj(Grafo* g, int v, Apontador atual);
 
 bool listaAdjVazia(Grafo*, int);
 
