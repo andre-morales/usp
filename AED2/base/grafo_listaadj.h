@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#define VERTICE_INVALIDO NULL;
 
 typedef int Peso;
 
@@ -11,7 +12,7 @@ typedef struct aresta {
 typedef Aresta* Apontador;
 
 typedef struct {
-	Aresta** listaAdj;
+	Apontador* listaAdj;
 	int numVertices;
 	int numArestas;
 } Grafo;

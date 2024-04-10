@@ -14,7 +14,7 @@ bool inicializaGrafo(Grafo* grafo, int nv) {
 
 	grafo->numArestas = 0;
 	grafo->numVertices = nv;
-	grafo->listaAdj = (Aresta**)calloc(nv, sizeof(Aresta*));
+	grafo->listaAdj = (Apontador*)calloc(nv, sizeof(Apontador));
 	if (!grafo->listaAdj) {
 		fprintf(stderr, "ERRO: inicializaGrafo() -- Alocação falhou.\n");
 		return false;
@@ -37,5 +37,9 @@ bool listaAdjVazia(Grafo* gr, int v) {
 }
 
 Apontador proxListaAdj(Grafo*, int v, Apontador atual) {
+	if (atual == NULL) {
+		return VERTICE_INVALIDO;
+	}
 	
+	return atual->prox;
 }

@@ -14,8 +14,11 @@ void main() {
 
 	printf("Adjacentes de V: ");
 	Apontador V = 1;
-	Apontador vert = -1;
-	while((vert = proxListaAdj(&g, V, vert)) != -1) {
+	Apontador vert = VERTICE_INVALIDO;
+	while(true) {
+		vert = proxListaAdj(&g, V, vert);
+		if (vert == VERTICE_INVALIDO) break;
+		
 		printf("%i ", vert);
 		//pause();
 	}
