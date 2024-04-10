@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 bool inicializaGrafo(Grafo* grafo, int nv) {
-	if (g == NULL) {
+	if (grafo == NULL) {
 		fprintf(stderr, "ERRO: inicializaGrafo() -- Grafo não pode ser nulo.\n");
 		return false;
 	}
@@ -22,12 +22,16 @@ bool inicializaGrafo(Grafo* grafo, int nv) {
 	return true;
 }
 
-bool listaAdjVazia(int v, Grafo* gr) {
-	if (v >= g->numVertices) {
+void imprimeGrafo(Grafo* g) {
+	
+}
+
+bool listaAdjVazia(Grafo* gr, int v) {
+	if (v >= gr->numVertices) {
 		fprintf(stderr, "ERR: listaAdjVazia() -- Bad vertex.\n");
 		return false;
 	}
 
-	Aresta* lista = g->listaAdj[v];
+	Aresta* lista = gr->listaAdj[v];
 	return !lista;
 }

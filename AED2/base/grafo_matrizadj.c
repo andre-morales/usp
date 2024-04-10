@@ -5,7 +5,7 @@ bool inicializaGrafo(Grafo* g, int v) {
 	// Testes de sanidade
 	if (g == NULL) {
 		fprintf(stderr, "ERRO: inicializaGrafo()\n");
-		fprintf(stderr, "  Grafo não pode ser nulo.")
+		fprintf(stderr, "  Grafo não pode ser nulo.");
 		return false;
 	}
 	if (v <= 0 || v > MAXNUMVERTICES) {
@@ -27,15 +27,28 @@ bool inicializaGrafo(Grafo* g, int v) {
 }
 
 void imprimeGrafo(Grafo* g) {
+	// Print header
+	printf("    ");
+	for (int x = 0; x < g->numVertices; x++) {
+		printf("%i ", x);
+	}
+	printf("\n");
+
 	for (int y = 0; y < g->numVertices; y++) {
+		printf("%i | ", y);
 		for (int x = 0; x < g->numVertices; x++) {
-			printf("%*i ", 2, g->mat[y][x]);
+			int a = g->mat[y][x];
+			if (a == AN) {
+				printf(". ");
+			} else {
+				printf("%*i ", 1, a);
+			}
 		}	
 		printf("\n");
 	}
 }
 
-bool verificaValidadeVertice(int v, Grafo* g) {
+bool verificaValidadeVertice(Grafo* g, int v) {
 	if (v < 0 || v >= g->numVertices) {
 		fprintf(stderr, "Vértice [%i] ilegal: 0 <= v < %i\n", v, g->numVertices);
 		return false;
@@ -43,26 +56,26 @@ bool verificaValidadeVertice(int v, Grafo* g) {
 	return true;
 }
 
-void insereAresta(int v1, int v2, Peso w, Grafo* g) {
-	if (!verificaValidadeVertice(v1, g) || !verificaValidadeVertice(v2, g)) return;
+void insereAresta(Grafo* g, int v1, int v2, Peso w) {
+	if (!verificaValidadeVertice(g, v1) || !verificaValidadeVertice(g, v2)) return;
 
 	g->mat[v1][v2] = w;
 	g->numArestas++;
 }
 
-Peso obtemPesoAresta(int v1, int v2, Grafo* g) {
-	if (!verificaValidadeVertice(v1, g) || !verificaValidadeVertice(v2, g)) return AN;
+Peso obtemPesoAresta(Grafo* g, int v1, int v2) {
+	if (!verificaValidadeVertice(g, v1) || !verificaValidadeVertice(g, v2)) return AN;
 
 	return g->mat[v1][v2];
 }
 
-bool existeAresta(int v1, int v2, Grafo* g) {
-	int w = obtemPesoAresta(v1, v2, g);
+bool existeAresta(Grafo* g, int v1, int v2) {
+	int w = obtemPesoAresta(g, v1, v2);
 	return w != AN;
 }
 
-bool removeAresta(int v1, int v2, Peso* outWeight, Grafo* g) {
-	if (!verificaValidadeVertice(v1, g) || !verificaValidadeVertice(v2, g)) return false;
+bool removeAresta(Grafo* g, int v1, int v2, Peso* outWeight) {
+	if (!verificaValidadeVertice(g, v1) || !verificaValidadeVertice(g, v2)) return false;
 
 	Peso w = g->mat[v1][v2];
 
@@ -76,14 +89,40 @@ bool removeAresta(int v1, int v2, Peso* outWeight, Grafo* g) {
 	return true;
 }
 
-bool listaAdjVazia(int v, Grafo* g) {
-	if (!verificaValidadeVertice(v, g)) return false;
+bool listaAdjVazia(Grafo* g, int v) {
+	if (!verificaValidadeVertice(g, v)) return false;
 
 	for (int i = 0; i < g->numVertices; i++) {
 		if (g->mat[v][i] != AN) return false;
 	}
 
 	return false;
+}
+
+int proxListaAdj(Grafo* g, int v, int atual) {
+	if (!verificaValidadeVertice(g, v)) {
+		return VERTICE_INVALIDO;
+	}
+
+	/* -- Código original não para na última aresta
+	atual++;
+	while(atual < g->numVertices && g->mat[v][atual] == AN) {
+		atual++;
+		if (atual == g->numVertices) {
+			return VERTICE_INVALIDO;
+		}
+	}
+	return atual;
+	*/
+
+	atual++;
+	for(; atual < g->numVertices; atual++) {
+		// Enquanto estivermos passando por arestas nulas, apenas continue
+		if (g->mat[v][atual] == AN) continue;
+		
+		return atual;
+	}
+	return VERTICE_INVALIDO;
 }
 
 void liberaGrafo(Grafo* g) {}

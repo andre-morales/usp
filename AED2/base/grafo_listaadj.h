@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 typedef int Peso;
 
 typedef struct aresta {
@@ -14,4 +16,7 @@ typedef struct {
 
 bool inicializaGrafo(Grafo*, int);
 
-bool listaAdjVazia(int, Grafo*);
+void imprimeGrafo(Grafo*);
+
+bool listaAdjVazia(Grafo*, int);
+

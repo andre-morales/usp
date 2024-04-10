@@ -1,8 +1,16 @@
-test.exe: obj/main.o obj/grafo_matrizadj.o
-	gcc obj/main.o obj/grafo_matrizadj.o -o test.exe
-	
-obj/grafo_matrizadj.o: grafo_matrizadj.h grafo_matrizadj.c
-	gcc -c grafo_matrizadj.c -o obj/grafo_matrizadj.o
+MAT: testa_matriz
+LIS: testa_lista
 
-obj/main.o: main.c grafo_matrizadj.h
-	gcc -c main.c -o obj/main.o
+testa_matriz: grafo_matrizadj.o testa_grafo.o
+	gcc -o testa_grafo_matriz.exe grafo_matrizadj.o testa_grafo.o
+
+grafo_matrizadj.o: grafo_matrizadj.c grafo_matrizadj.h
+	gcc -c grafo_matrizadj.c
+
+testa_grafo.o: testa_grafo.c grafo_matrizadj.h
+	gcc -c testa_grafo.c
+
+clean:
+	del *.o *.exe
+
+

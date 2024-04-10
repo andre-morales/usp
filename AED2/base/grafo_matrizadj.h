@@ -3,6 +3,7 @@
 
 #define MAXNUMVERTICES 100
 #define AN -1
+#define VERTICE_INVALIDO -1
 
 typedef int Peso;
 typedef struct {
@@ -20,15 +21,17 @@ bool inicializaGrafo(Grafo*, int);
 void imprimeGrafo(Grafo*);
 
 // Verifica se um vértice está dentro dos limites permitidos
-bool verificaValidadeVertice(int, Grafo*);
+bool verificaValidadeVertice(Grafo*, int);
 
 // Insere uma aresta com um peso no grafo
-void insereAresta(int, int, Peso, Grafo*);
+void insereAresta(Grafo*, int, int, Peso);
 
-bool existeAresta(int, int, Grafo*);
+bool existeAresta(Grafo*, int, int);
 
-bool removeAresta(int, int, Peso*, Grafo*);
+bool removeAresta(Grafo*, int, int, Peso*);
 
-bool listaAdjVazia(int, Grafo*);
+int proxListaAdj(Grafo* g, int v, int atual);
+
+bool listaAdjVazia(Grafo*, int);
 
 void liberaGrafo(Grafo*);
