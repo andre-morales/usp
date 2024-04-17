@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "grafo_matrizadj.h"
+#include "grafo_listaadj.h"
 
 void pause();
 
@@ -13,7 +13,7 @@ void main() {
 	insereAresta(&g, 1, 9, 1);
 
 	printf("Adjacentes de V: ");
-	Apontador V = 1;
+	int V = 1;
 
 	/*
 	Apontador vert = VERTICE_INVALIDO;
@@ -26,12 +26,12 @@ void main() {
 	}
 	printf("\n");	*/
 
-	Apontador vert = primeiroListaAdj(&g, V);
+	Apontador aresta = primeiroListaAdj(&g, V);
 	while(true) {
-		if (vert == VERTICE_INVALIDO) break;
+		if (aresta == VERTICE_INVALIDO) break;
 		
-		printf("%i ", vert);
-		vert = proxListaAdj(&g, V, vert);
+		printf("%i ", aresta->vdest);
+		aresta = proxListaAdj(&g, V, aresta);
 		
 		//pause();
 	}

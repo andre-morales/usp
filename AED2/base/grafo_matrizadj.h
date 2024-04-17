@@ -26,7 +26,7 @@ void liberaGrafo(Grafo* g);
 void imprimeGrafo(Grafo* g);
 
 // Verifica se um vértice está dentro dos limites permitidos
-bool verificaValidadeVertice(Grafo*, int v);
+bool verificaVertice(Grafo*, int v);
 
 // Insere uma aresta com um peso no grafo
 void insereAresta(Grafo* g, int v1, int v2, Peso p);

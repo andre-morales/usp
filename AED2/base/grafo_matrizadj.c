@@ -48,7 +48,7 @@ void imprimeGrafo(Grafo* g) {
 	}
 }
 
-bool verificaValidadeVertice(Grafo* g, int v) {
+bool verificaVertice(Grafo* g, int v) {
 	if (v < 0 || v >= g->numVertices) {
 		fprintf(stderr, "Vértice [%i] ilegal: 0 <= v < %i\n", v, g->numVertices);
 		return false;
@@ -57,14 +57,14 @@ bool verificaValidadeVertice(Grafo* g, int v) {
 }
 
 void insereAresta(Grafo* g, int v1, int v2, Peso w) {
-	if (!verificaValidadeVertice(g, v1) || !verificaValidadeVertice(g, v2)) return;
+	if (!verificaVertice(g, v1) || !verificaVertice(g, v2)) return;
 
 	g->mat[v1][v2] = w;
 	g->numArestas++;
 }
 
 Peso obtemPesoAresta(Grafo* g, int v1, int v2) {
-	if (!verificaValidadeVertice(g, v1) || !verificaValidadeVertice(g, v2)) return AN;
+	if (!verificaVertice(g, v1) || !verificaVertice(g, v2)) return AN;
 
 	return g->mat[v1][v2];
 }
@@ -75,7 +75,7 @@ bool existeAresta(Grafo* g, int v1, int v2) {
 }
 
 bool removeAresta(Grafo* g, int v1, int v2, Peso* outWeight) {
-	if (!verificaValidadeVertice(g, v1) || !verificaValidadeVertice(g, v2)) return false;
+	if (!verificaVertice(g, v1) || !verificaVertice(g, v2)) return false;
 
 	Peso w = g->mat[v1][v2];
 
@@ -90,7 +90,7 @@ bool removeAresta(Grafo* g, int v1, int v2, Peso* outWeight) {
 }
 
 bool listaAdjVazia(Grafo* g, int v) {
-	if (!verificaValidadeVertice(g, v)) return false;
+	if (!verificaVertice(g, v)) return false;
 
 	for (int i = 0; i < g->numVertices; i++) {
 		if (g->mat[v][i] != AN) return false;
@@ -100,13 +100,13 @@ bool listaAdjVazia(Grafo* g, int v) {
 }
 
 Apontador primeiroListaAdj(Grafo* g, int v) {
-	if (!verificaValidadeVertice(g, v)) return VERTICE_INVALIDO;
+	if (!verificaVertice(g, v)) return VERTICE_INVALIDO;
 
 	return proxListaAdj(g, v, -1);
 }
 
 Apontador proxListaAdj(Grafo* g, int v, Apontador atual) {
-	if (!verificaValidadeVertice(g, v)) {
+	if (!verificaVertice(g, v)) {
 		return VERTICE_INVALIDO;
 	}
 

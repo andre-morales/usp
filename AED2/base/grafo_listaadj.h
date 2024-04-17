@@ -1,5 +1,7 @@
 #include <stdbool.h>
-#define VERTICE_INVALIDO NULL;
+
+#define VERTICE_INVALIDO NULL
+#define AN -1
 
 typedef int Peso;
 
@@ -17,10 +19,22 @@ typedef struct {
 	int numArestas;
 } Grafo;
 
-bool inicializaGrafo(Grafo*, int);
+bool inicializaGrafo(Grafo* grafo, int numVertices);
 
-void imprimeGrafo(Grafo*);
+void imprimeGrafo(Grafo* grafo);
 
-bool listaAdjVazia(Grafo*, int);
+bool verificaVertice(Grafo* grafo, int vertice);
 
-Apontador proxListaAdj(Grafo*, int v, Apontador atual);
+bool existeAresta(Grafo* grafo, int v1, int v2);
+
+Peso obtemPesoAresta(Grafo* grafo, int v1, int v2);
+
+// Insere uma aresta entre v1 e v2 com peso p. Não verifica se a aresta já existe.
+void insereAresta(Grafo* grafo, int v1, int v2, Peso p);
+
+Apontador primeiroListaAdj(Grafo* grafo, int vertice);
+
+Apontador proxListaAdj(Grafo* grafo, int vertice, Apontador atual);
+
+bool listaAdjVazia(Grafo* grafo, int vertice);
+
