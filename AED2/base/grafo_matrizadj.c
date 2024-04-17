@@ -99,12 +99,18 @@ bool listaAdjVazia(Grafo* g, int v) {
 	return false;
 }
 
-int proxListaAdj(Grafo* g, int v, int atual) {
+Apontador primeiroListaAdj(Grafo* g, int v) {
+	if (!verificaValidadeVertice(g, v)) return VERTICE_INVALIDO;
+
+	return proxListaAdj(g, v, -1);
+}
+
+Apontador proxListaAdj(Grafo* g, int v, Apontador atual) {
 	if (!verificaValidadeVertice(g, v)) {
 		return VERTICE_INVALIDO;
 	}
 
-	/* -- Código original não para na última aresta
+	/* -- Código original não faz parada na última aresta
 	atual++;
 	while(atual < g->numVertices && g->mat[v][atual] == AN) {
 		atual++;
