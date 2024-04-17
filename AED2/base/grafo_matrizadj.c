@@ -99,6 +99,10 @@ bool listaAdjVazia(Grafo* g, int v) {
 	return false;
 }
 
+int apontadorVertice(Apontador ap) {
+	return ap;
+}
+
 Apontador primeiroListaAdj(Grafo* g, int v) {
 	if (!verificaVertice(g, v)) return VERTICE_INVALIDO;
 

@@ -3,41 +3,37 @@
 
 void pause();
 
+void printAdjacentes(Grafo* g, int V);
+
 void main() {
 	Grafo g;
 	inicializaGrafo(&g, 10);
 
-	insereAresta(&g, 1, 2, 1);
-	insereAresta(&g, 1, 3, 1);
-	insereAresta(&g, 1, 7, 1);
-	insereAresta(&g, 1, 9, 1);
+	insereAresta(&g, 1, 2, 0);
+	insereAresta(&g, 1, 3, 0);
+	insereAresta(&g, 1, 7, 0);
+	insereAresta(&g, 1, 9, 0);
 
+	//printAdjacentes(&g, 1);
+
+	imprimeGrafo(&g);
+
+	removeAresta(&g, 1, 3, NULL);
+
+	imprimeGrafo(&g);
+}
+
+void printAdjacentes(Grafo* g, int V) {
 	printf("Adjacentes de V: ");
-	int V = 1;
 
-	/*
-	Apontador vert = VERTICE_INVALIDO;
-	while(true) {
-		vert = proxListaAdj(&g, V, vert);
-		if (vert == VERTICE_INVALIDO) break;
-		
-		printf("%i ", vert);
-		//pause();
-	}
-	printf("\n");	*/
-
-	Apontador aresta = primeiroListaAdj(&g, V);
+	Apontador aresta = primeiroListaAdj(g, V);
 	while(true) {
 		if (aresta == VERTICE_INVALIDO) break;
 		
-		printf("%i ", aresta->vdest);
-		aresta = proxListaAdj(&g, V, aresta);
-		
-		//pause();
+		printf("%i ", apontadorVertice(aresta));
+		aresta = proxListaAdj(g, V, aresta);
 	}
 	printf("\n");
-
-	imprimeGrafo(&g);
 }
 
 void pause() {

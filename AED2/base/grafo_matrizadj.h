@@ -38,6 +38,9 @@ bool existeAresta(Grafo* g, int v1, int v2);
 // Retorna verdadeiro se a aresta existia, falso c.c
 bool removeAresta(Grafo* g, int v1, int v2, Peso* p);
 
+// Extrai o índice do vértice apontado
+int apontadorVertice(Apontador ap);
+
 // Retorna um apontador para o primeiro vértice adjacente a este
 Apontador primeiroListaAdj(Grafo* g, int v);
 
