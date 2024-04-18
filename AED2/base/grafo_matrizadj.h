@@ -1,4 +1,10 @@
-#pragma once
+/**
+ * Autor: André Morales
+ * Criação: 02/04/2024
+ * Modificação: 18/04/2024
+ * 
+ * Cabeçalho para a implementação do grafo por matrizes de adjacência.
+ **/
 #include <stdbool.h>
 
 #define MAXNUMVERTICES 100

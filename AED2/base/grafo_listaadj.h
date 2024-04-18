@@ -1,3 +1,10 @@
+/**
+ * Autor: André Morales
+ * Criação: 02/04/2024
+ * Modificação: 18/04/2024
+ * 
+ * Cabeçalho para a implementação do grafo por listas de adjacência.
+ **/
 #include <stdbool.h>
 
 #define VERTICE_INVALIDO NULL
@@ -24,6 +31,10 @@ bool inicializaGrafo(Grafo* grafo, int numVertices);
 void liberaGrafo(Grafo* grafo);
 
 void imprimeGrafo(Grafo* grafo);
+
+int obtemNrVertices(Grafo* grafo);
+
+int obtemNrArestas(Grafo* grafo);
 
 // Insere uma aresta entre v1 e v2 com peso p. Não verifica se a aresta já existe.
 void insereAresta(Grafo* grafo, int v1, int v2, Peso p);

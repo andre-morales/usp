@@ -1,7 +1,17 @@
+/**
+ * Autor: André Morales
+ * Criação: 02/04/2024
+ * Modificação: 18/04/2024
+ * 
+ * Implementação das funções base para o grafo por listas de adjacência.
+ **/
 #include "grafo_listaadj.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#define MORE_CHECKS 1
+
+void extra_assert(bool check);
 
 bool inicializaGrafo(Grafo* grafo, int nv) {
 	if (grafo == NULL) {
@@ -57,6 +67,14 @@ void imprimeGrafo(Grafo* g) {
 	}
 }
 
+int obtemNrVertices(Grafo* grafo) {
+	return grafo->numVertices;
+}
+
+int obtemNrArestas(Grafo* grafo) {
+	return grafo->numArestas;
+}
+
 void insereAresta(Grafo* grafo, int v1, int v2, Peso p) {
 	// Garante a validade dos vértices
 	assert(verificaVertice(grafo, v1));
@@ -77,6 +95,11 @@ void insereAresta(Grafo* grafo, int v1, int v2, Peso p) {
 	arestaB->vdest = v1;
 
 	grafo->listaAdj[v2] = arestaB;	
+
+	grafo->numArestas++;
+
+	// Verifica se a aresta realmente foi inserida
+	extra_assert(existeAresta(grafo, v1, v2));
 }
 
 // Obtém o peso de uma aresta sem realizar verificações
@@ -164,6 +187,8 @@ bool removeAresta(Grafo* g, int v1, int v2, Peso* p) {
 	assert(p1 == p2);
 	assert(existia1 == existia2);
 
+	g->numArestas--;
+
 	if (p) *p = p1;
 	return existia1;
 }
@@ -205,4 +230,11 @@ int apontadorVertice(Apontador ap) {
 
 bool apontadorValido(Apontador ap) {
 	return ap != NULL;
+}
+
+// Realiza um assert a mais
+void extra_assert(bool check) {
+	#if MORE_CHECKS
+	assert(check);
+	#endif
 }

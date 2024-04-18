@@ -1,3 +1,10 @@
+/**
+ * Autor: André Morales
+ * Criação: 02/04/2024
+ * Modificação: 18/04/2024
+ * 
+ * Implementação das funções base para o grafo por matrizes de adjacência.
+ **/
 #include "grafo_matrizadj.h"
 #include <stdio.h>
 
