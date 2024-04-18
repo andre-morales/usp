@@ -21,6 +21,8 @@ void main() {
 	removeAresta(&g, 1, 3, NULL);
 
 	imprimeGrafo(&g);
+
+	liberaGrafo(&g);
 }
 
 void printAdjacentes(Grafo* g, int V) {

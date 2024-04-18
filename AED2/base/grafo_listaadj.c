@@ -23,8 +23,25 @@ bool inicializaGrafo(Grafo* grafo, int nv) {
 	return true;
 }
 
+void liberaGrafo(Grafo* g) {
+	for (int v = 0; v < g->numVertices; g++) {
+		// Libera toda a lista de adjacência do vértice
+		Aresta* aresta = g->listaAdj[v];
+		while (aresta) {
+			Aresta* prox = aresta->prox;
+			free(aresta);
+			aresta = prox;
+		}
+	}
+
+	// Libera o arranjo de todas as listas de adjacência
+	free(g->listaAdj);
+}
+
 void imprimeGrafo(Grafo* g) {
 	int n = g->numVertices;
+	printf("-------- %i --------\n", g->numVertices);
+	
 	for (int i = 0; i < n; i++) {
 		printf("V%i: ", i);
 		
@@ -40,9 +57,26 @@ void imprimeGrafo(Grafo* g) {
 	}
 }
 
-// Verifica se existe uma aresta entre v1 e v2. Não faz checks.
-bool existeAresta(Grafo* g, int v1, int v2) {
-	return obtemPesoAresta(g, v1, v2) != AN;
+void insereAresta(Grafo* grafo, int v1, int v2, Peso p) {
+	// Garante a validade dos vértices
+	assert(verificaVertice(grafo, v1));
+	assert(verificaVertice(grafo, v2));
+
+	// Cria uma aresta de V1 para V2, inserindo a aresta no começo da lista de adjacência
+	Aresta* arestaA = (Aresta*)malloc(sizeof(Aresta));
+	arestaA->prox = grafo->listaAdj[v1];
+	arestaA->peso = p;
+	arestaA->vdest = v2;
+
+	grafo->listaAdj[v1] = arestaA;
+
+	// Cria uma aresta de V2 para V1, inserindo a aresta no começo da lista de adjacência
+	Aresta* arestaB = (Aresta*)malloc(sizeof(Aresta));
+	arestaB->prox = grafo->listaAdj[v2];
+	arestaB->peso = p;
+	arestaB->vdest = v1;
+
+	grafo->listaAdj[v2] = arestaB;	
 }
 
 // Obtém o peso de uma aresta sem realizar verificações
@@ -75,35 +109,9 @@ Peso obtemPesoAresta(Grafo* grafo, int v1, int v2) {
 	assert(obtemPesoArestaInseguro(grafo, v2, v1) == p);
 }
 
-// Extrai o índice do vértice apontado
-int apontadorVertice(Apontador ap) {
-	return ap->vdest;
-}
-
-bool apontadorValido(Apontador ap) {
-	return ap != NULL;
-}
-
-void insereAresta(Grafo* grafo, int v1, int v2, Peso p) {
-	// Garante a validade dos vértices
-	assert(verificaVertice(grafo, v1));
-	assert(verificaVertice(grafo, v2));
-
-	// Cria uma aresta de V1 para V2, inserindo a aresta no começo da lista de adjacência
-	Aresta* arestaA = (Aresta*)malloc(sizeof(Aresta));
-	arestaA->prox = grafo->listaAdj[v1];
-	arestaA->peso = p;
-	arestaA->vdest = v2;
-
-	grafo->listaAdj[v1] = arestaA;
-
-	// Cria uma aresta de V2 para V1, inserindo a aresta no começo da lista de adjacência
-	Aresta* arestaB = (Aresta*)malloc(sizeof(Aresta));
-	arestaB->prox = grafo->listaAdj[v2];
-	arestaB->peso = p;
-	arestaB->vdest = v1;
-
-	grafo->listaAdj[v2] = arestaB;	
+// Verifica se existe uma aresta entre v1 e v2. Não faz checks.
+bool existeAresta(Grafo* g, int v1, int v2) {
+	return obtemPesoAresta(g, v1, v2) != AN;
 }
 
 // Remove uma aresta de v1 para v2. Sem verificação.
@@ -188,4 +196,13 @@ bool verificaVertice(Grafo* g, int v) {
 		return false;
 	}
 	return true;
+}
+
+// Extrai o índice do vértice apontado
+int apontadorVertice(Apontador ap) {
+	return ap->vdest;
+}
+
+bool apontadorValido(Apontador ap) {
+	return ap != NULL;
 }
