@@ -5,7 +5,13 @@
  * 
  * Arquivo de testes para as funções de grafo.
  **/
+#if GRAFO_MATRIZ && !(GRAFO_LISTA)
 #include "grafo_matrizadj.h"
+#endif
+#if GRAFO_LISTA && !(GRAFO_MATRIZ)
+#include "grafo_listaadj.h"
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -22,17 +28,17 @@ typedef struct {
 	int* antecessor;
 } Busca;
 
-void buscaProfundidade(Grafo* g);
-void visitaBP(Grafo* g, int v, Busca busca);
+void buscaProfundidade(Grafo*);
+void visitaBP(Grafo*, int, Busca*, int);
 
-void leGrafo(Grafo* g, char* arquivo);
-void printAdjacentes(Grafo* g, int V);
+void leGrafo(Grafo*, char*);
+void printAdjacentes(Grafo*, int);
 void pause();
 
 int main() {
 	Grafo grafo;
 	Grafo* g = &grafo;
-	leGrafo(g, "gr1.txt");
+	leGrafo(g, "gr2.txt");
 
 	imprimeGrafo(g);
 
@@ -44,20 +50,12 @@ int main() {
 void buscaProfundidade(Grafo* g) {
 	int numVertices = obtemNrVertices(g);
 
-	// Inicialização das estruturas básicas
+	// Alocação e inicialização dos estados de cada vértice
 	int tempo = 0;
 	BuscaCor cor[numVertices];
 	int tempoDesc[numVertices];
 	int tempoTerm[numVertices];
 	int antecessor[numVertices];
-
-	Busca busca = {
-		.tempo = &tempo,
-		.cor = cor,
-		.tempoDesc = tempoDesc,
-		.tempoTerm = tempoTerm,
-		.antecessor = antecessor
-	};
 
 	for (int i = 0; i < numVertices; i++) {
 		cor[i] = BUSCA_BRANCO;
@@ -66,49 +64,89 @@ void buscaProfundidade(Grafo* g) {
 		antecessor[i] = -1;
 	}
 
+	// Estrutura de busca global para o algoritmo
+	Busca busca = {
+		.tempo = &tempo,
+		.cor = cor,
+		.tempoDesc = tempoDesc,
+		.tempoTerm = tempoTerm,
+		.antecessor = antecessor
+	};
+
 	// Visita cada vértice
 	for (int i = 0; i < numVertices; i++) {
-		visitaBP(g, i, busca);	
+		if (cor[i] == BUSCA_BRANCO) {
+			printf("root: \n");
+			visitaBP(g, i, &busca, 1);	
+		}
 	}
 }
 
 // Visita um vértice em busca de profundidade.
-// V: O vértice a visitar
-// tempo: referência para o relógio geral do algoritmo, incrementado para cada evento de
-//        descoberta ou término
-// cor: referência para o arranjo de cores de todos os vértices
-// tempoDesc: referência para o tempo de descoberta de todos os vértices
-// tempoTerm: referência para o tempo de término de visita de todos os vértices
-void visitaBP(Grafo* gr, int v, Busca b) {
+// grafo: O grafo o qual se deseja fazer a busca
+// vert: O vértice a visitar
+// b: Estrutura de busca
+// prof: Profundidade da busca
+void visitaBP(Grafo* grafo, int vert, Busca* b, int prof) {
 	// Se o vértice já foi descoberto, não faz nada.
-	if (b.cor[v] != BUSCA_BRANCO) return;
+	if (b->cor[vert] != BUSCA_BRANCO) return;
 
 	// Evento de descoberta: o vértice passa a ser cinza, incrementa o relógio global e
 	// registra o tempo de descoberta
-	b.cor[v] = BUSCA_CINZA;
-	b.tempoDesc[v] = ++(*b.tempo);
+	b->cor[vert] = BUSCA_CINZA;
+	b->tempoDesc[vert] = ++(*b->tempo);
 
-	printf("%i: INI %i\n", v, b.tempoDesc[v]);
+	printf("%*s", prof * 2, "");
+	printf("%i: [+] Ini. t: %i\n", vert, b->tempoDesc[vert]);
 
 	// Pega o primeiro vértice alcançável por V para iterar por todos os alcançáveis
-	Apontador ap = primeiroListaAdj(gr, v);
+	Apontador ap = primeiroListaAdj(grafo, vert);
 	while (apontadorValido(ap)) {
 		// Obtém o índice do vértice adjacente
 		int adjacente = verticeDestino(ap);
 
-		// Salva o antecessor do próximo vértice (adjacente) e invoca o algoritmo no adjacente
-		b.antecessor[adjacente] = v;
-		visitaBP(gr, adjacente, b);
+		switch (b->cor[adjacente]) {
+		// Se o adjacente ainda é branco (não foi descoberto), passamos por uma aresta de árvore.
+		// Salva-se o antecessor do adjacente e invoca o algoritmo recursivamente
+		case BUSCA_BRANCO:
+			printf("%*s", prof * 2, "");
+			printf("%i:  => %i ARV\n", vert, adjacente);
+
+			b->antecessor[adjacente] = vert;
+			visitaBP(grafo, adjacente, b, prof + 1);
+			break;
+		// Se o adjacente é cinza, ele ainda está sendo explorado e a aresta de retorno nos leva de
+		// volta a esse antecessor.
+		case BUSCA_CINZA:
+			printf("%*s", prof * 2, "");
+			printf("%i:  => %i RET\n", vert, adjacente);
+			break;
+		// Se o adjacente é preto, ele já foi explorado e pode ser tanto aresta de avanço quanto de cruzamento
+		case BUSCA_PRETO:
+			// Se o vértice descobridor é mais velho que o descoberto, isso indica uma aresta
+			// de avanço, e o vértice adjacente é um descendente
+			if (b->tempoDesc[vert] < b->tempoDesc[adjacente]) {
+				printf("%*s", prof * 2, "");
+				printf("%i:  => %i AVN\n", vert, adjacente);
+			// Caso contrário, o descobridor é mais novo que o descoberto e temos uma aresta
+			// de cruzamento, onde os dois vértices não tem relação de ancestralidade.
+			} else {
+				printf("%*s", prof * 2, "");
+				printf("%i:  => %i CRZ\n", vert, adjacente);
+			}
+			break;
+		}
 
 		// Avança para o próximo adjacente
-		ap = proxListaAdj(gr, v, ap);
+		ap = proxListaAdj(grafo, vert, ap);
 	}
 
 	// Evento de término: troca a cor do vértice para preto e incrementa o relógio global
-	b.cor[v] = BUSCA_PRETO;
-	b.tempoTerm[v] = ++(*b.tempo);
+	b->cor[vert] = BUSCA_PRETO;
+	b->tempoTerm[vert] = ++(*b->tempo);
 
-	printf("%i: FIM %i\n", v, b.tempoTerm[v]);
+	printf("%*s", prof * 2, "");
+	printf("%i: [-] fim. t: %i\n", vert, b->tempoTerm[vert]);
 }
 
 void leGrafo(Grafo* g, char* arquivo) {
@@ -122,6 +160,19 @@ void leGrafo(Grafo* g, char* arquivo) {
 		return;
 	}
 
+	// Avança todos os comentários no começo do arquivo
+	while (true) {
+		long pos = ftell(str);
+		char ch = fgetc(str); 
+		if (ch == '#') {
+			char buffer[128];
+			fgets(buffer, 128, str);
+		} else {
+			fseek(str, pos, SEEK_SET);
+			break;
+		}
+	}
+
 	// Le o cabeçalho do arquivo e cria o grafo
 	int numVertices, numArestas;
 	fscanf(str, "%i %i", &numVertices, &numArestas);
@@ -131,7 +182,11 @@ void leGrafo(Grafo* g, char* arquivo) {
 	for (int i = 0; i < numArestas; i++) {
 		Peso peso;
 		int v1, v2;
-		fscanf(str, "%i %i %i", &v1, &v2, &peso);
+		int items = fscanf(str, "%i %i %i", &v1, &v2, &peso);
+		if (items < 3) {
+			fprintf(stderr, "Fim inesperado do arquivo.\n");
+			exit(-1);
+		}
 
 		printf("Inserindo aresta %i:%i\n", v1, v2);
 		insereAresta(g, v1, v2, peso);
