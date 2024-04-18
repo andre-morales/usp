@@ -7,6 +7,13 @@
  **/
 #include "grafo_matrizadj.h"
 #include <stdio.h>
+#include <assert.h>
+
+#if GRAFO_DIRECIONADO
+#define TIPO_GRAFO "DIR"
+#else
+#define TIPO_GRAFO "UND"
+#endif
 
 bool inicializaGrafo(Grafo* g, int v) {
 	// Testes de sanidade
@@ -35,6 +42,7 @@ bool inicializaGrafo(Grafo* g, int v) {
 
 void imprimeGrafo(Grafo* g) {
 	// Print header
+	printf("-------- [%i %s %i] --------\n", g->numVertices, TIPO_GRAFO, g->numArestas);
 	printf("    ");
 	for (int x = 0; x < g->numVertices; x++) {
 		printf("%i ", x);
@@ -63,38 +71,82 @@ bool verificaVertice(Grafo* g, int v) {
 	return true;
 }
 
-void insereAresta(Grafo* g, int v1, int v2, Peso w) {
-	if (!verificaVertice(g, v1) || !verificaVertice(g, v2)) return;
+#if GRAFO_DIRECIONADO
+	void insereAresta(Grafo* g, int v1, int v2, Peso w) {
+		assert(verificaVertice(g, v1));
+		assert(verificaVertice(g, v2));
 
-	g->mat[v1][v2] = w;
-	g->numArestas++;
-}
+		g->mat[v1][v2] = w;
+		g->numArestas++;
+	}
 
-Peso obtemPesoAresta(Grafo* g, int v1, int v2) {
-	if (!verificaVertice(g, v1) || !verificaVertice(g, v2)) return AN;
+	Peso obtemPesoAresta(Grafo* g, int v1, int v2) {
+		assert(verificaVertice(g, v1));
+		assert(verificaVertice(g, v2));
 
-	return g->mat[v1][v2];
-}
+		return g->mat[v1][v2];
+	}
 
-bool existeAresta(Grafo* g, int v1, int v2) {
-	int w = obtemPesoAresta(g, v1, v2);
-	return w != AN;
-}
+	bool existeAresta(Grafo* g, int v1, int v2) {
+		int w = obtemPesoAresta(g, v1, v2);
+		return w != AN;
+	}
 
-bool removeAresta(Grafo* g, int v1, int v2, Peso* outWeight) {
-	if (!verificaVertice(g, v1) || !verificaVertice(g, v2)) return false;
+	bool removeAresta(Grafo* g, int v1, int v2, Peso* outWeight) {
+		assert(verificaVertice(g, v1));
+		assert(verificaVertice(g, v2));
 
-	Peso w = g->mat[v1][v2];
+		Peso w = g->mat[v1][v2];
 
-	// Aresta inexistente
-	if (w == AN) return false;
+		// Aresta inexistente
+		if (w == AN) return false;
 
-	if (outWeight) *outWeight = w;
+		if (outWeight) *outWeight = w;
 
-	g->mat[v1][v2] = AN;
-	g->numArestas--;
-	return true;
-}
+		g->mat[v1][v2] = AN;
+		g->numArestas--;
+		return true;
+	}
+// Grafos não direcionados
+#else
+	void insereAresta(Grafo* g, int v1, int v2, Peso w) {
+		assert(verificaVertice(g, v1));
+		assert(verificaVertice(g, v2));
+
+		g->mat[v1][v2] = w;
+		g->mat[v2][v1] = w;
+		g->numArestas++;
+	}
+
+	Peso obtemPesoAresta(Grafo* g, int v1, int v2) {
+		assert(verificaVertice(g, v1));
+		assert(verificaVertice(g, v2));
+
+		// Assegura que a outra aresta simétrica tem mesmo peso
+		assert(g->mat[v1][v2] == g->mat[v2][v1]);
+
+		return g->mat[v1][v2];
+	}
+
+	bool existeAresta(Grafo* g, int v1, int v2) {
+		Peso p = obtemPesoAresta(g, v1, v2);
+		return p != AN;
+	}
+
+	bool removeAresta(Grafo* g, int v1, int v2, Peso* peso) {
+		// Obtém o peso e verifica se a aresta realmente existe
+		Peso p = obtemPesoAresta(g, v1, v2);	
+		if (p == AN) return false;
+
+		// Salva o peso se o usuário deseja
+		if (peso) *peso = p;
+
+		g->mat[v1][v2] = AN;
+		g->mat[v2][v1] = AN;
+		g->numArestas--;
+		return true;
+	}
+#endif
 
 bool listaAdjVazia(Grafo* g, int v) {
 	if (!verificaVertice(g, v)) return false;
@@ -104,10 +156,6 @@ bool listaAdjVazia(Grafo* g, int v) {
 	}
 
 	return false;
-}
-
-int apontadorVertice(Apontador ap) {
-	return ap;
 }
 
 Apontador primeiroListaAdj(Grafo* g, int v) {
@@ -120,17 +168,6 @@ Apontador proxListaAdj(Grafo* g, int v, Apontador atual) {
 	if (!verificaVertice(g, v)) {
 		return VERTICE_INVALIDO;
 	}
-
-	/* -- Código original não faz parada na última aresta
-	atual++;
-	while(atual < g->numVertices && g->mat[v][atual] == AN) {
-		atual++;
-		if (atual == g->numVertices) {
-			return VERTICE_INVALIDO;
-		}
-	}
-	return atual;
-	*/
 
 	atual++;
 	for(; atual < g->numVertices; atual++) {
