@@ -143,3 +143,19 @@ Apontador proxListaAdj(Grafo* g, int v, Apontador atual) {
 }
 
 void liberaGrafo(Grafo* g) {}
+
+int obtemNrVertices(Grafo* grafo) {
+	return grafo->numVertices;
+}
+
+int obtemNrArestas(Grafo* grafo) {
+	return grafo->numArestas;
+}
+
+int verticeDestino(Apontador ap) {
+	return ap;
+}
+
+bool apontadorValido(Apontador ap) {
+	return ap != VERTICE_INVALIDO;
+}

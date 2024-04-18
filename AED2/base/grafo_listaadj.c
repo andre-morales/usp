@@ -5,13 +5,19 @@
  * 
  * Implementação das funções base para o grafo por listas de adjacência.
  **/
+#define MORE_CHECKS 1
 #include "grafo_listaadj.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#define MORE_CHECKS 1
 
-void extra_assert(bool check);
+#if GRAFO_DIRECIONADO
+#define TIPO_GRAFO "DIR"
+#else
+#define TIPO_GRAFO "UND"
+#endif
+
+void extraAssert(bool check);
 
 bool inicializaGrafo(Grafo* grafo, int nv) {
 	if (grafo == NULL) {
@@ -50,7 +56,7 @@ void liberaGrafo(Grafo* g) {
 
 void imprimeGrafo(Grafo* g) {
 	int n = g->numVertices;
-	printf("-------- %i --------\n", g->numVertices);
+	printf("-------- [%i %s %i] --------\n", g->numVertices, TIPO_GRAFO, g->numArestas);
 	
 	for (int i = 0; i < n; i++) {
 		printf("V%i: ", i);
@@ -75,35 +81,41 @@ int obtemNrArestas(Grafo* grafo) {
 	return grafo->numArestas;
 }
 
-void insereAresta(Grafo* grafo, int v1, int v2, Peso p) {
-	// Garante a validade dos vértices
-	assert(verificaVertice(grafo, v1));
-	assert(verificaVertice(grafo, v2));
+Apontador primeiroListaAdj(Grafo* g, int v) {
+	assert(verificaVertice(g, v));
 
-	// Cria uma aresta de V1 para V2, inserindo a aresta no começo da lista de adjacência
-	Aresta* arestaA = (Aresta*)malloc(sizeof(Aresta));
-	arestaA->prox = grafo->listaAdj[v1];
-	arestaA->peso = p;
-	arestaA->vdest = v2;
-
-	grafo->listaAdj[v1] = arestaA;
-
-	// Cria uma aresta de V2 para V1, inserindo a aresta no começo da lista de adjacência
-	Aresta* arestaB = (Aresta*)malloc(sizeof(Aresta));
-	arestaB->prox = grafo->listaAdj[v2];
-	arestaB->peso = p;
-	arestaB->vdest = v1;
-
-	grafo->listaAdj[v2] = arestaB;	
-
-	grafo->numArestas++;
-
-	// Verifica se a aresta realmente foi inserida
-	extra_assert(existeAresta(grafo, v1, v2));
+	return g->listaAdj[v];
 }
 
-// Obtém o peso de uma aresta sem realizar verificações
-Peso obtemPesoArestaInseguro(Grafo* g, int v1, int v2) {
+Apontador proxListaAdj(Grafo*, int v, Apontador atual) {
+	if (atual == NULL) {
+		return VERTICE_INVALIDO;
+	}
+	
+	return atual->prox;
+}
+
+bool listaAdjVazia(Grafo* gr, int v) {
+	// Assegura a validade do vértice
+	assert(verificaVertice(gr, v));
+
+	Aresta* lista = gr->listaAdj[v];
+	return !lista;
+}
+
+// Insere uma aresta direcionada de V1 para V2 sem verificações. Não incrementa o número de arestas.
+void insereArestaImpl(Grafo* g, int v1, int v2, Peso p) {
+	// Cria uma aresta de V1 para V2, inserindo a aresta no começo da lista de adjacência
+	Aresta* aresta = (Aresta*)malloc(sizeof(Aresta));
+	aresta->prox = g->listaAdj[v1];
+	aresta->peso = p;
+	aresta->vdest = v2;
+
+	g->listaAdj[v1] = aresta;
+}
+
+// Obtém o peso de uma aresta direcionada sem realizar verificações
+Peso obtemPesoArestaImpl(Grafo* g, int v1, int v2) {
 	// Obtém a primeira aresta adjacente de v1 para procurar v2
 	Aresta* aresta = g->listaAdj[v1];
 
@@ -120,26 +132,10 @@ Peso obtemPesoArestaInseguro(Grafo* g, int v1, int v2) {
 	return AN;
 }
 
-Peso obtemPesoAresta(Grafo* grafo, int v1, int v2) {
-	// Garante que os vértices são válidos
-	assert(verificaVertice(grafo, v1));
-	assert(verificaVertice(grafo, v2));
 
-	// Obtém o peso da aresta
-	Peso p = obtemPesoArestaInseguro(grafo, v1, v2);
-	
-	// Garante que o peso da aresta na outra direção é igual ao que encontramos nesta direção
-	assert(obtemPesoArestaInseguro(grafo, v2, v1) == p);
-}
-
-// Verifica se existe uma aresta entre v1 e v2. Não faz checks.
-bool existeAresta(Grafo* g, int v1, int v2) {
-	return obtemPesoAresta(g, v1, v2) != AN;
-}
-
-// Remove uma aresta de v1 para v2. Sem verificação.
-// Retornando verdadeiro se a aresta existia e gravando opcionalmente seu peso.
-bool removeArestaSingular(Grafo* g, int v1, int v2, Peso* peso) {
+// Remove uma aresta direcionada de v1 para v2. Sem verificação e sem decréscimo no número de arestas.
+// Retorna verdadeiro se a aresta existe, e grava opcionalmente seu peso.
+bool removeArestaImpl(Grafo* g, int v1, int v2, Peso* peso) {
 	// Busca a presença de V2 na lista de adjacência de V1,
 	// vamos iterar a lista de adjacência de v1
 	Aresta* ant = NULL;
@@ -170,49 +166,98 @@ bool removeArestaSingular(Grafo* g, int v1, int v2, Peso* peso) {
 	return false;
 }
 
-bool removeAresta(Grafo* g, int v1, int v2, Peso* p) {
-	// Verifica a validade dos vértices
-	assert(verificaVertice(g, v1));
-	assert(verificaVertice(g, v2));
+// Se o grafo for direcionado
+#if GRAFO_DIRECIONADO
+	void insereAresta(Grafo* grafo, int v1, int v2, Peso p) {
+		// Garante a validade dos vértices
+		assert(verificaVertice(grafo, v1));
+		assert(verificaVertice(grafo, v2));
 
-	// Remove a aresta V1 -> V2
-	Peso p1 = AN;
-	bool existia1 = removeArestaSingular(g, v1, v2, &p1);
+		// Cria uma aresta de V1 para V2
+		insereArestaImpl(grafo, v1, v2, p);
 
-	// Remove a aresta V2 -> V1
-	Peso p2 = AN;
-	bool existia2 = removeArestaSingular(g, v2, v1, &p2);
+		grafo->numArestas++;
 
-	// Garanta a integridade do grafo: os pesos e a existência das arestas direcionais devem ser os mesmos
-	assert(p1 == p2);
-	assert(existia1 == existia2);
-
-	g->numArestas--;
-
-	if (p) *p = p1;
-	return existia1;
-}
-
-Apontador primeiroListaAdj(Grafo* g, int v) {
-	assert(verificaVertice(g, v));
-
-	return g->listaAdj[v];
-}
-
-Apontador proxListaAdj(Grafo*, int v, Apontador atual) {
-	if (atual == NULL) {
-		return VERTICE_INVALIDO;
+		// Verifica se a aresta realmente foi inserida
+		extraAssert(existeAresta(grafo, v1, v2));
 	}
-	
-	return atual->prox;
-}
 
-bool listaAdjVazia(Grafo* gr, int v) {
-	// Assegura a validade do vértice
-	assert(verificaVertice(gr, v));
+	Peso obtemPesoAresta(Grafo* grafo, int v1, int v2) {
+		// Garante que os vértices são válidos
+		assert(verificaVertice(grafo, v1));
+		assert(verificaVertice(grafo, v2));
 
-	Aresta* lista = gr->listaAdj[v];
-	return !lista;
+		// Obtém o peso da aresta
+		return obtemPesoArestaImpl(grafo, v1, v2);
+	}
+
+	bool removeAresta(Grafo* g, int v1, int v2, Peso* p) {
+		// Verifica a validade dos vértices
+		assert(verificaVertice(g, v1));
+		assert(verificaVertice(g, v2));
+
+		// Remove a aresta V1 -> V2
+		bool existe = removeArestaImpl(g, v1, v2, p);
+		g->numArestas--;
+		return existe;
+	}
+// Se o grafo for não direcionado
+#else
+	void insereAresta(Grafo* grafo, int v1, int v2, Peso p) {
+		// Garante a validade dos vértices
+		assert(verificaVertice(grafo, v1));
+		assert(verificaVertice(grafo, v2));
+
+		// Cria uma aresta de V1 para V2, e de V2 para V1
+		insereArestaImpl(grafo, v1, v2, p);
+		insereArestaImpl(grafo, v2, v1, p);
+
+		grafo->numArestas++;
+
+		// Verifica se a aresta realmente foi inserida
+		extraAssert(existeAresta(grafo, v1, v2));
+	}
+
+	Peso obtemPesoAresta(Grafo* grafo, int v1, int v2) {
+		// Garante que os vértices são válidos
+		assert(verificaVertice(grafo, v1));
+		assert(verificaVertice(grafo, v2));
+
+		// Obtém o peso da aresta
+		Peso p = obtemPesoArestaImpl(grafo, v1, v2);
+		
+		// Garante que o peso da aresta na outra direção é igual ao que encontramos nesta direção
+		assert(obtemPesoArestaImpl(grafo, v2, v1) == p);
+		return p;
+	}
+
+	bool removeAresta(Grafo* g, int v1, int v2, Peso* p) {
+		// Verifica a validade dos vértices
+		assert(verificaVertice(g, v1));
+		assert(verificaVertice(g, v2));
+
+		// Remove a aresta V1 -> V2
+		Peso p1 = AN;
+		bool existia1 = removeArestaImpl(g, v1, v2, &p1);
+
+		// Remove a aresta V2 -> V1
+		Peso p2 = AN;
+		bool existia2 = removeArestaImpl(g, v2, v1, &p2);
+
+		// Garanta a integridade do grafo: os pesos e a existência das arestas direcionais devem ser os mesmos
+		assert(p1 == p2);
+		assert(existia1 == existia2);
+
+		g->numArestas--;
+
+		if (p) *p = p1;
+		return existia1;
+	}
+#endif
+
+// Verifica se existe uma aresta entre v1 e v2. Não faz checks.
+bool existeAresta(Grafo* g, int v1, int v2) {
+	return obtemPesoAresta(g, v1, v2) != AN;
 }
 
 bool verificaVertice(Grafo* g, int v) {
@@ -224,7 +269,7 @@ bool verificaVertice(Grafo* g, int v) {
 }
 
 // Extrai o índice do vértice apontado
-int apontadorVertice(Apontador ap) {
+int verticeDestino(Apontador ap) {
 	return ap->vdest;
 }
 
@@ -232,8 +277,8 @@ bool apontadorValido(Apontador ap) {
 	return ap != NULL;
 }
 
-// Realiza um assert a mais
-void extra_assert(bool check) {
+// Realiza uma asserção de condições geralmente raras. Pode ser desabilitado configurando a flag MORE_CHECKS
+void extraAssert(bool check) {
 	#if MORE_CHECKS
 	assert(check);
 	#endif

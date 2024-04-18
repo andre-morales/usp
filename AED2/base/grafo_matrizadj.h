@@ -5,8 +5,11 @@
  * 
  * Cabeçalho para a implementação do grafo por matrizes de adjacência.
  **/
-#include <stdbool.h>
+#if GRAFO_LISTA
+#error ERRO! Incluindo header de grafo por matriz mas compilando utilizando grafo por lista
+#endif
 
+#include <stdbool.h>
 #define MAXNUMVERTICES 100
 #define AN -1
 #define VERTICE_INVALIDO -1
@@ -31,21 +34,18 @@ void liberaGrafo(Grafo* g);
 // Imprime a matriz de adjacência de um grafo
 void imprimeGrafo(Grafo* g);
 
+int obtemNrVertices(Grafo* grafo);
+
+int obtemNrArestas(Grafo* grafo);
+
 // Verifica se um vértice está dentro dos limites permitidos
 bool verificaVertice(Grafo*, int v);
 
-// Insere uma aresta com um peso no grafo
-void insereAresta(Grafo* g, int v1, int v2, Peso p);
-
-// Verifica se existe uma aresta entre os vértices V1 e V2 no grafo
-bool existeAresta(Grafo* g, int v1, int v2);
-
-// Remove uma aresta entre os vértices V1 e V2, opcionalmente extraindo seu peso
-// Retorna verdadeiro se a aresta existia, falso c.c
-bool removeAresta(Grafo* g, int v1, int v2, Peso* p);
-
 // Extrai o índice do vértice apontado
-int apontadorVertice(Apontador ap);
+int verticeDestino(Apontador ap);
+
+// Verifica se um apontador é válido
+bool apontadorValido(Apontador ap);
 
 // Retorna um apontador para o primeiro vértice adjacente a este
 Apontador primeiroListaAdj(Grafo* g, int v);
@@ -56,3 +56,12 @@ Apontador proxListaAdj(Grafo* g, int v, Apontador atual);
 // Retorna verdadeiro se o vértice indicado não possui adjacentes, falso c.c
 bool listaAdjVazia(Grafo* g, int v);
 
+// Insere uma aresta com um peso no grafo
+void insereAresta(Grafo* g, int v1, int v2, Peso p);
+
+// Verifica se existe uma aresta entre os vértices V1 e V2 no grafo
+bool existeAresta(Grafo* g, int v1, int v2);
+
+// Remove uma aresta entre os vértices V1 e V2, opcionalmente extraindo seu peso
+// Retorna verdadeiro se a aresta existia, falso c.c
+bool removeAresta(Grafo* g, int v1, int v2, Peso* p);
