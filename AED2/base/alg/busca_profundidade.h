@@ -9,21 +9,30 @@ typedef enum {
 	BUSCA_BRANCO, BUSCA_CINZA, BUSCA_PRETO
 } BuscaCor;
 
+// Tipos possíveis de aresta
 typedef enum {
 	ARESTA_ARVORE, ARESTA_RETORNO, ARESTA_AVANCO, ARESTA_CRUZAMENTO
 } BuscaAresta;
 
 typedef struct {
+	struct CallbacksType* calls;
+	void* objeto;
+
 	int* tempo;
 	BuscaCor* cor;
 	int* tempoDesc;
 	int* tempoTerm;
 	int* antecessor;
-	struct CallbacksType* calls;
 } Busca;
 
+// Tipo de callback de descoberta. Chamado assim que um vértice branco for descoberto
 typedef void(*DescobertaFn)(Busca* busca, int vert);
+
+// Tipo de callback para aresta. Chamado para toda aresta entre o vértice o adjacente.
+// Inclui o tipo de aresta que foi identificado.
 typedef bool(*ArestaFn)(Busca* busca, BuscaAresta tipoAresta, int vert, int adjacente);
+
+// Tipo de callback para fechamento. Chamado assim que todos os adjacentes de um vértice foram explorados.
 typedef void(*FechamentoFn)(Busca* busca, int vert);
 
 typedef struct CallbacksType {
@@ -32,6 +41,6 @@ typedef struct CallbacksType {
 	FechamentoFn fechamento;
 } Callbacks;
 
-void buscaProfundidade(Grafo* grafo, Callbacks calls);
-
-BuscaAresta tipoAresta(Busca* busca, int vert, int adjacente);
+// Executa uma busca em profundidade no grafo dado. Com callbacks opcionalmente configurados e um
+// objeto arbitrário determinado pelo usuário.
+void buscaProfundidade(Grafo* grafo, Callbacks calls, void* objeto);

@@ -2,10 +2,14 @@
 #include "../grafo.h"
 #include <stdio.h>
 
+// Identifica o tipo de uma aresta
+BuscaAresta tipoAresta(Busca* busca, int vert, int adjacente);
+
+// Passo da busca
 void visitaBP(Grafo*, Busca*, int, int);
 
 // Executa uma busca em profundidade no grafo
-void buscaProfundidade(Grafo* g, Callbacks calls) {
+void buscaProfundidade(Grafo* g, Callbacks calls, void* objeto) {
 	int numVertices = obtemNrVertices(g);
 
 	// Alocação e inicialização dos estados de cada vértice
@@ -24,12 +28,13 @@ void buscaProfundidade(Grafo* g, Callbacks calls) {
 
 	// Estrutura de busca global para o algoritmo
 	Busca busca = {
+		.calls = &calls,
+		.objeto = objeto,
 		.tempo = &tempo,
 		.cor = cor,
 		.tempoDesc = tempoDesc,
 		.tempoTerm = tempoTerm,
-		.antecessor = antecessor,
-		.calls = &calls
+		.antecessor = antecessor
 	};
 
 	// Visita cada vértice
@@ -43,8 +48,8 @@ void buscaProfundidade(Grafo* g, Callbacks calls) {
 
 // Visita um vértice em busca de profundidade.
 // grafo: O grafo o qual se deseja fazer a busca
+// b: Estrutura global de busca
 // vert: O vértice a visitar
-// b: Estrutura de busca
 // prof: Profundidade da busca
 void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 	// Se o vértice já foi descoberto, não faz nada.
@@ -57,7 +62,9 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [+] Ini. t: %i\n", vert, b->tempoDesc[vert]);
-	b->calls->descoberta(b, vert);
+	if (b->calls->descoberta) {
+		b->calls->descoberta(b, vert);
+	}
 
 	// Pega o primeiro vértice alcançável por V para iterar por todos os alcançáveis
 	Apontador ap = primeiroListaAdj(grafo, vert);
@@ -70,8 +77,10 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 
 		// Evento de descoberta de aresta: Notifica-se o callback.
 		// Se ele determinar que não devemos seguir essa aresta, nós a pulamos
-		bool seguir = b->calls->aresta(b, tAresta, vert, adjacente);
-		if (!seguir) continue;
+		if (b->calls->aresta) {
+			bool seguir = b->calls->aresta(b, tAresta, vert, adjacente);
+			if (!seguir) continue;
+		}
 
 		switch (tAresta) {
 		case ARESTA_ARVORE:
@@ -106,7 +115,9 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [-] fim. t: %i\n", vert, b->tempoTerm[vert]);
-	b->calls->fechamento(b, vert);
+	if (b->calls->fechamento) {
+		b->calls->fechamento(b, vert);
+	}
 }
 
 BuscaAresta tipoAresta(Busca* busca, int vert, int adjacente) {
