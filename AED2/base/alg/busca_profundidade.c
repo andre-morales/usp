@@ -2,10 +2,10 @@
 #include "../grafo.h"
 #include <stdio.h>
 
-void visitaBP(Grafo*, int, Busca*, int);
+void visitaBP(Grafo*, Busca*, int, int);
 
 // Executa uma busca em profundidade no grafo
-void buscaProfundidade(Grafo* g) {
+void buscaProfundidade(Grafo* g, Callbacks calls) {
 	int numVertices = obtemNrVertices(g);
 
 	// Alocação e inicialização dos estados de cada vértice
@@ -28,14 +28,15 @@ void buscaProfundidade(Grafo* g) {
 		.cor = cor,
 		.tempoDesc = tempoDesc,
 		.tempoTerm = tempoTerm,
-		.antecessor = antecessor
+		.antecessor = antecessor,
+		.calls = &calls
 	};
 
 	// Visita cada vértice
 	for (int i = 0; i < numVertices; i++) {
 		if (cor[i] == BUSCA_BRANCO) {
 			printf("root: \n");
-			visitaBP(g, i, &busca, 1);	
+			visitaBP(g, &busca, i, 1);	
 		}
 	}
 }
@@ -45,7 +46,7 @@ void buscaProfundidade(Grafo* g) {
 // vert: O vértice a visitar
 // b: Estrutura de busca
 // prof: Profundidade da busca
-void visitaBP(Grafo* grafo, int vert, Busca* b, int prof) {
+void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 	// Se o vértice já foi descoberto, não faz nada.
 	if (b->cor[vert] != BUSCA_BRANCO) return;
 
@@ -56,47 +57,47 @@ void visitaBP(Grafo* grafo, int vert, Busca* b, int prof) {
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [+] Ini. t: %i\n", vert, b->tempoDesc[vert]);
+	b->calls->descoberta(b, vert);
 
 	// Pega o primeiro vértice alcançável por V para iterar por todos os alcançáveis
 	Apontador ap = primeiroListaAdj(grafo, vert);
-	while (apontadorValido(ap)) {
+	for (; apontadorValido(ap); ap = proxListaAdj(grafo, vert, ap)) {
 		// Obtém o índice do vértice adjacente
 		int adjacente = verticeDestino(ap);
 
-		switch (b->cor[adjacente]) {
-		// Se o adjacente ainda é branco (não foi descoberto), passamos por uma aresta de árvore.
-		// Salva-se o antecessor do adjacente e invoca o algoritmo recursivamente
-		case BUSCA_BRANCO:
+		// Identifica o tipo de aresta de V -> A baseado no estado atual da busca
+		BuscaAresta tAresta = tipoAresta(b, vert, adjacente);
+
+		// Evento de descoberta de aresta: Notifica-se o callback.
+		// Se ele determinar que não devemos seguir essa aresta, nós a pulamos
+		bool seguir = b->calls->aresta(b, tAresta, vert, adjacente);
+		if (!seguir) continue;
+
+		switch (tAresta) {
+		case ARESTA_ARVORE:
 			printf("%*s", prof * 2, "");
 			printf("%i:  => %i ARV\n", vert, adjacente);
-
-			b->antecessor[adjacente] = vert;
-			visitaBP(grafo, adjacente, b, prof + 1);
 			break;
-		// Se o adjacente é cinza, ele ainda está sendo explorado e a aresta de retorno nos leva de
-		// volta a esse antecessor.
-		case BUSCA_CINZA:
+		case ARESTA_RETORNO:
 			printf("%*s", prof * 2, "");
 			printf("%i:  => %i RET\n", vert, adjacente);
 			break;
-		// Se o adjacente é preto, ele já foi explorado e pode ser tanto aresta de avanço quanto de cruzamento
-		case BUSCA_PRETO:
-			// Se o vértice descobridor é mais velho que o descoberto, isso indica uma aresta
-			// de avanço, e o vértice adjacente é um descendente
-			if (b->tempoDesc[vert] < b->tempoDesc[adjacente]) {
-				printf("%*s", prof * 2, "");
-				printf("%i:  => %i AVN\n", vert, adjacente);
-			// Caso contrário, o descobridor é mais novo que o descoberto e temos uma aresta
-			// de cruzamento, onde os dois vértices não tem relação de ancestralidade.
-			} else {
-				printf("%*s", prof * 2, "");
-				printf("%i:  => %i CRZ\n", vert, adjacente);
-			}
+		case ARESTA_AVANCO:
+			printf("%*s", prof * 2, "");
+			printf("%i:  => %i AVN\n", vert, adjacente);
+			break;
+		case ARESTA_CRUZAMENTO:
+			printf("%*s", prof * 2, "");
+			printf("%i:  => %i CRZ\n", vert, adjacente);
 			break;
 		}
 
-		// Avança para o próximo adjacente
-		ap = proxListaAdj(grafo, vert, ap);
+		// Se o vértice ainda não foi descoberto, salva-se o antecessor do adjacente e invoca
+		// o algoritmo recursivamente
+		if (b->cor[adjacente] == BUSCA_BRANCO) {
+			b->antecessor[adjacente] = vert;
+			visitaBP(grafo, b, adjacente, prof + 1);
+		}
 	}
 
 	// Evento de término: troca a cor do vértice para preto e incrementa o relógio global
@@ -105,4 +106,27 @@ void visitaBP(Grafo* grafo, int vert, Busca* b, int prof) {
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [-] fim. t: %i\n", vert, b->tempoTerm[vert]);
+	b->calls->fechamento(b, vert);
+}
+
+BuscaAresta tipoAresta(Busca* busca, int vert, int adjacente) {
+	BuscaCor cor = busca->cor[adjacente];
+
+	// Se o adjacente ainda é branco (não foi descoberto), passamos por uma aresta de árvore.
+	if (cor == BUSCA_BRANCO) return ARESTA_ARVORE;
+
+	// Se o adjacente é cinza, ele ainda está sendo explorado e a aresta de retorno nos leva de
+	// volta a esse antecessor.
+	if (cor == BUSCA_CINZA) return ARESTA_RETORNO;
+	
+	// Se o adjacente é preto, ele já foi explorado e pode ser tanto aresta de avanço quanto de cruzamento
+	// Se o vértice descobridor é mais velho que o descoberto, isso indica uma aresta
+	// de avanço, e o vértice adjacente é um descendente
+	if (busca->tempoDesc[vert] < busca->tempoDesc[adjacente]) {
+		return ARESTA_AVANCO;
+	}
+
+	// Caso contrário, o descobridor é mais novo que o descoberto e temos uma aresta
+	// de cruzamento, onde os dois vértices não tem relação de ancestralidade.
+	return ARESTA_CRUZAMENTO;
 }

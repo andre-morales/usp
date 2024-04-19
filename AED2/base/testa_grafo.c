@@ -8,13 +8,26 @@
 #include "grafo.h"
 #include "alg/busca_profundidade.h"
 #include "alg/le_grafo.h"
+//#include "alg/ciclico.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
-void leGrafo(Grafo*, char*);
 void printAdjacentes(Grafo*, int);
 void pause();
+
+void descoberta(Busca* b, int vert) {
+	//printf("inic %i\n", vert);
+}
+
+bool aresta(Busca* b, BuscaAresta tipo, int vert, int dest) {
+	//printf("ar %i:%i\n", vert, dest);
+	return false;
+}
+
+void fechamento(Busca* b, int vert) {
+	//printf("fech %i\n", vert);
+}
 
 int main() {
 	Grafo grafo;
@@ -23,7 +36,18 @@ int main() {
 
 	imprimeGrafo(g);
 
-	buscaProfundidade(g);
+	/*bool ci = ehGrafoCiclico(g);
+	if (ci) {
+		printf("cicli");
+	} else {
+		printf("nao cicli");
+	}*/
+	Callbacks calls = {
+		.descoberta = &descoberta,
+		.aresta = &aresta,
+		.fechamento = &fechamento
+	};
+	buscaProfundidade(g, calls);
 
 	liberaGrafo(g);
 }
