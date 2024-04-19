@@ -9,6 +9,12 @@
 #error ERRO! Incluindo header de grafo por lista mas compilando utilizando grafo por matriz
 #endif
 
+#ifdef GRAFO_IMPL
+#error Header de grafo ja incluso
+#else
+#define GRAFO_IMPL 1
+#endif
+
 #include <stdbool.h>
 #define VERTICE_INVALIDO NULL
 #define AN -1
@@ -23,7 +29,7 @@ typedef struct aresta {
 
 typedef Aresta* Apontador;
 
-typedef struct {
+typedef struct GrafoType {
 	Apontador* listaAdj;
 	int numVertices;
 	int numArestas;

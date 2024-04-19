@@ -9,6 +9,12 @@
 #error ERRO! Incluindo header de grafo por matriz mas compilando utilizando grafo por lista
 #endif
 
+#ifdef GRAFO_IMPL
+#error Header de grafo ja incluso
+#else
+#define GRAFO_IMPL 1
+#endif
+
 #include <stdbool.h>
 #define MAXNUMVERTICES 100
 #define AN -1
@@ -16,7 +22,7 @@
 
 typedef int Peso;
 typedef int Apontador;
-typedef struct {
+typedef struct GrafoType {
 	Peso mat[MAXNUMVERTICES][MAXNUMVERTICES];
 	int numVertices;
 	int numArestas;

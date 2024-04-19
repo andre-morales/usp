@@ -1,6 +1,12 @@
 #pragma once
 #include <stdbool.h>
 
+#ifdef GRAFO_IMPL
+#error Header de grafo ja incluso
+#else
+#define GRAFO_IMPL 1
+#endif
+
 #define MAXNUMVERTICES 100
 #define AN -1
 
