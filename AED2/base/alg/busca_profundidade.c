@@ -27,7 +27,7 @@ void buscaProfundidade(Grafo* g, Acessos acessos, void* objeto) {
 
 	// Estrutura global de busca para o algoritmo
 	Busca busca = {
-		.acessos = &acessos,
+		.acessos = acessos,
 		.objeto = objeto,
 		.tempo = 0,
 		.cor = cor,
@@ -61,8 +61,8 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [+] Ini. t: %i\n", vert, b->tempoDesc[vert]);
-	if (b->acessos->descoberta) {
-		b->acessos->descoberta(b, vert);
+	if (b->acessos.descoberta) {
+		b->acessos.descoberta(b, vert);
 	}
 
 	// Pega o primeiro vértice alcançável por V para iterar por todos os alcançáveis
@@ -76,8 +76,8 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 
 		// -- EVENTO ARESTA: Notifica-se o acesso.
 		// Se ele determinar que não devemos seguir essa aresta, nós a pulamos
-		if (b->acessos->aresta) {
-			bool seguir = b->acessos->aresta(b, tAresta, vert, adjacente);
+		if (b->acessos.aresta) {
+			bool seguir = b->acessos.aresta(b, tAresta, vert, adjacente);
 			if (!seguir) continue;
 		}
 
@@ -114,8 +114,8 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [-] fim. t: %i\n", vert, b->tempoTerm[vert]);
-	if (b->acessos->fechamento) {
-		b->acessos->fechamento(b, vert);
+	if (b->acessos.fechamento) {
+		b->acessos.fechamento(b, vert);
 	}
 }
 

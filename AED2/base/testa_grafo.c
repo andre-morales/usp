@@ -11,47 +11,44 @@
 #include "alg/grafo_ciclico.h"
 #include "alg/ordenacao_topologica.h"
 #include "alg/busca_largura.h"
+#include "alg/caminho_curto.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
 void printAdjacentes(Grafo*, int);
 void pause();
-void teste2();
-void teste3();
-void teste4();
-void teste5();
+void teste2(Grafo*);
+void teste3(Grafo*);
+void teste4(Grafo*);
+void teste5(Grafo*);
 
 int main() {
-	teste5();
-}
-
-void teste5() {
 	Grafo grafo;
 	Grafo* g = &grafo;
-	leGrafo(g, "grafos/5.txt");
-	imprimeGrafo(g);
 
-	Acessos acessos = { NULL };
-	buscaLargura(g, acessos, NULL);
+	teste5(g);
 
 	liberaGrafo(g);
 }
 
-void teste4() {
-	Grafo grafo;
-	Grafo* g = &grafo;
+void teste5(Grafo* g) {
+	leGrafo(g, "grafos/5.txt");
+	imprimeGrafo(g);
+
+	caminhoCurto(g, 0, 2);
+
+	liberaGrafo(g);
+}
+
+void teste4(Grafo* g) {
 	leGrafo(g, "grafos/4.txt");
 	imprimeGrafo(g);
 
 	ordenarTopologicamente(g);
-
-	liberaGrafo(g);
 }
 
-void teste3() {
-	Grafo grafo;
-	Grafo* g = &grafo;
+void teste3(Grafo* g) {
 	leGrafo(g, "grafos/3.txt");
 	imprimeGrafo(g);
 
@@ -61,21 +58,15 @@ void teste3() {
 	} else {
 		printf("Não cíclico\n");
 	}
-
-	liberaGrafo(g);
 }
 
-void teste2() {
-	Grafo grafo;
-	Grafo* g = &grafo;
+void teste2(Grafo* g) {
 	leGrafo(g, "grafos/2.txt");
 	imprimeGrafo(g);
 
 	Acessos acessos = { NULL };
 
 	buscaProfundidade(g, acessos, NULL);
-
-	liberaGrafo(g);
 }
 
 void exIterarAdjacentes(Grafo* g) {

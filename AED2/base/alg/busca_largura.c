@@ -1,5 +1,6 @@
 #include "busca_largura.h"
 #include "../grafo.h"
+#include "busca.h"
 #include "fila.h"
 #include <stdio.h>
 
@@ -7,66 +8,26 @@
 void visitaBL(Grafo*, Busca*, int);
 
 // Executa uma busca em profundidade no grafo
-void buscaLargura(Grafo* g, Acessos acessos, void* objeto) {
+void buscaLargura(Busca* busca) {
+	Grafo* g = busca->grafo;
 	int numVertices = obtemNrVertices(g);
 
-	// Alocação e inicialização dos estados de cada vértice
-	BuscaCor cor[numVertices];
-	int tempoDesc[numVertices];
-	int tempoTerm[numVertices];
-	int antecessor[numVertices];
-	int distancia[numVertices];
-
-	for (int i = 0; i < numVertices; i++) {
-		cor[i] = BUSCA_BRANCO;
-		tempoDesc[i] = 0;
-		tempoTerm[i] = 0;
-		antecessor[i] = -1;
-		distancia[i] = -1;
+	// Evento de início de busca
+	if (busca->acessos.inicio) {
+		busca->acessos.inicio(busca);
 	}
 
-	// Estrutura global de busca para o algoritmo
-	Busca busca = {
-		.acessos = &acessos,
-		.objeto = objeto,
-		.tempo = 0,
-		.cor = cor,
-		.tempoDesc = tempoDesc,
-		.tempoTerm = tempoTerm,
-		.antecessor = antecessor,
-		.distancia = distancia
-	};
+	if (busca->inicio != -1) {
+		visitaBL(g, busca, busca->inicio);
+	} else {
+		for (int i = 0; i < numVertices; i++) {
+			visitaBL(g, busca, i);
+		}
+	}
 
-	Fila fila;
-	inicializaFila(&fila);
-
-	/*insereFila(&fila, 4);
-	insereFila(&fila, 5);
-	insereFila(&fila, 6);
-	insereFila(&fila, 7);
-
-	printf("%i\n", retiraFila(&fila));
-	printf("%i\n", retiraFila(&fila));
-	printf("%i\n", retiraFila(&fila));
-	printf("%i\n", retiraFila(&fila));
-
-	insereFila(&fila, 8);
-	insereFila(&fila, 9);
-	printf("%i\n", retiraFila(&fila));
-	printf("%i\n", retiraFila(&fila));
-	insereFila(&fila, 10);
-	insereFila(&fila, 11);
-	printf("%i\n", retiraFila(&fila));
-	printf("%i\n", retiraFila(&fila));*/
-
-	// Visita cada vértice se ele não foi visitado ainda
-	for (int i = 0; i < numVertices; i++) {
-		// Se o vértice já foi descoberto, não faz nada
-		if (cor[i] != BUSCA_BRANCO) continue;
-
-		// Enquanto houver vértices na fila, visite eles
-		printf("root: \n");
-		visitaBL(g, &busca, i);
+	// Evento de fim de busca
+	if (busca->acessos.fim) {
+		busca->acessos.fim(busca);
 	}
 }
 
@@ -77,6 +38,9 @@ void buscaLargura(Grafo* g, Acessos acessos, void* objeto) {
 // b: Estrutura global de busca
 // raiz: O vértice a visitar
 void visitaBL(Grafo* grafo, Busca* b, int raiz) {
+	// Se o vértice já foi descoberto, não faz nada
+	if (b->cor[raiz] != BUSCA_BRANCO) return;
+
 	Fila fila;
 	inicializaFila(&fila);
 
