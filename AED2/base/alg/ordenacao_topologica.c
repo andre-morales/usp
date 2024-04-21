@@ -25,14 +25,14 @@ void ordenarTopologicamente(Grafo* grafo) {
 	};
 
 	// Acessos na busca, só estamos interessados no momento em que um vértice se torna preto
-	Callbacks calls = {
+	Acessos acessos = {
 		.descoberta = NULL,
 		.aresta = NULL,
 		.fechamento = fechamentoAresta
 	};
 
 	// Executa a busca em profundidade
-	buscaProfundidade(grafo, calls, &topl);
+	buscaProfundidade(grafo, acessos, &topl);
 
 	// Imprime o vetor de ordenação em ordem reversa
 	int i = numVertices - 1;

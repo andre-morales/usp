@@ -8,7 +8,7 @@
 #include "grafo.h"
 #include "alg/le_grafo.h"
 #include "alg/busca_profundidade.h"
-#include "alg/ciclico.h"
+#include "alg/grafo_ciclico.h"
 #include "alg/ordenacao_topologica.h"
 #include <stdlib.h>
 #include <stdio.h>

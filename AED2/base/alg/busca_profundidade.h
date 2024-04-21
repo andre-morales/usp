@@ -3,7 +3,6 @@
 
 struct AcessosType;
 typedef struct AcessosType Acessos;
-typedef Acessos Callbacks;
 
 struct BuscaType;
 typedef struct BuscaType Busca;

@@ -1,8 +1,9 @@
-#include "ciclico.h"
+#include "grafo_ciclico.h"
 #include "busca_profundidade.h"
 #include "../grafo.h"
-#include <stdio.h>
+#include <stddef.h>
 
+// Acesso de aresta do algoritmo de busca em profundidade
 bool arestaDescoberta(Busca* busca, BuscaAresta tipoAresta, int vert, int dest) {
 	// O ponteiro de objeto da busca aponta para a flag que indica se o grafo for descoberto
 	// como cíclico
@@ -24,12 +25,13 @@ bool arestaDescoberta(Busca* busca, BuscaAresta tipoAresta, int vert, int dest) 
 bool ehGrafoCiclico(Grafo* g) {
 	bool ciclico = false;
 
-	Callbacks calls = {
+	// Acessos do algoritmo. Estamos interessados no momento de investigação de uma aresta.
+	Acessos acessos = {
 		.descoberta = NULL,
 		.aresta = &arestaDescoberta,
 		.fechamento = NULL
 	};
-	buscaProfundidade(g, calls, &ciclico);
+	buscaProfundidade(g, acessos, &ciclico);
 
 	return ciclico;
 }
