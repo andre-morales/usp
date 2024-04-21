@@ -13,7 +13,6 @@ void buscaProfundidade(Grafo* g, Acessos acessos, void* objeto) {
 	int numVertices = obtemNrVertices(g);
 
 	// Alocação e inicialização dos estados de cada vértice
-	int tempo = 0;
 	BuscaCor cor[numVertices];
 	int tempoDesc[numVertices];
 	int tempoTerm[numVertices];
@@ -30,7 +29,7 @@ void buscaProfundidade(Grafo* g, Acessos acessos, void* objeto) {
 	Busca busca = {
 		.acessos = &acessos,
 		.objeto = objeto,
-		.tempo = &tempo,
+		.tempo = 0,
 		.cor = cor,
 		.tempoDesc = tempoDesc,
 		.tempoTerm = tempoTerm,
@@ -58,7 +57,7 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 	// -- EVENTO DESCOBERTA: O vértice passa a ser cinza, incrementa o relógio global e
 	// registra o tempo de descoberta
 	b->cor[vert] = BUSCA_CINZA;
-	b->tempoDesc[vert] = ++(*b->tempo);
+	b->tempoDesc[vert] = ++b->tempo;
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [+] Ini. t: %i\n", vert, b->tempoDesc[vert]);
@@ -75,7 +74,7 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 		// Identifica o tipo de aresta de V -> A baseado no estado atual da busca
 		BuscaAresta tAresta = tipoAresta(b, vert, adjacente);
 
-		// -- EVENTO ARESTA: Notifica-se o callback.
+		// -- EVENTO ARESTA: Notifica-se o acesso.
 		// Se ele determinar que não devemos seguir essa aresta, nós a pulamos
 		if (b->acessos->aresta) {
 			bool seguir = b->acessos->aresta(b, tAresta, vert, adjacente);
@@ -111,7 +110,7 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 
 	// -- EVENTO FECHAMENTO: Troca a cor do vértice para preto e incrementa o relógio global
 	b->cor[vert] = BUSCA_PRETO;
-	b->tempoTerm[vert] = ++(*b->tempo);
+	b->tempoTerm[vert] = ++b->tempo;
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [-] fim. t: %i\n", vert, b->tempoTerm[vert]);

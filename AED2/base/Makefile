@@ -1,12 +1,12 @@
-CFLAGS = -Wall -std=c99 -DGRAFO_DIRECIONADO=1
+CFLAGS = -Wall -std=c99 -DGRAFO_DIRECIONADO=0
 
-ALG_OBJECTS = obj/le_grafo.o obj/busca_profundidade.o obj/grafo_ciclico.o obj/ordenacao_topologica.o
+ALG_OBJECTS = obj/le_grafo.o obj/alg/busca_profundidade.o obj/alg/grafo_ciclico.o obj/alg/ordenacao_topologica.o obj/alg/fila.o obj/alg/busca_largura.o
 
 MAT: testa_matriz
 LIS: testa_lista
 
 testa_matriz: CFLAGS += -DGRAFO_MATRIZ=1
-testa_lista: CFLAGS += -DGRAFO_LISTA=1	
+testa_lista: CFLAGS += -DGRAFO_LISTA=1
 
 testa_matriz: obj/grafo_matrizadj.o obj/testa_grafo.o $(ALG_OBJECTS)
 	gcc $(CFLAGS) -o prog_matriz.exe obj/grafo_matrizadj.o obj/testa_grafo.o $(ALG_OBJECTS)
@@ -26,18 +26,11 @@ obj/le_grafo.o: alg/le_grafo.c alg/le_grafo.h
 obj/testa_grafo.o: testa_grafo.c grafo_matrizadj.h grafo_listaadj.h
 	gcc $(CFLAGS) -o obj/testa_grafo.o -c testa_grafo.c
 
-
-obj/busca_profundidade.o: alg/busca_profundidade.c alg/busca_profundidade.h
-	gcc $(CFLAGS) -o obj/busca_profundidade.o -c alg/busca_profundidade.c
-
-obj/grafo_ciclico.o: alg/grafo_ciclico.c alg/grafo_ciclico.h
-	gcc $(CFLAGS) -o obj/grafo_ciclico.o -c alg/grafo_ciclico.c
-
-obj/ordenacao_topologica.o: alg/ordenacao_topologica.c alg/ordenacao_topologica.h
-	gcc $(CFLAGS) -o obj/ordenacao_topologica.o -c alg/ordenacao_topologica.c
-
+obj/alg/%.o: alg/%.c alg/%.h
+	gcc $(CFLAGS) -o $@ -c $<
 
 clean:
 	del *.o *.exe
 	del obj\*.o
+	del obj\alg\*.o
 
