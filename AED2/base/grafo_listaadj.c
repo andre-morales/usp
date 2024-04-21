@@ -116,12 +116,13 @@ void insereArestaImpl(Grafo* g, int v1, int v2, Peso p) {
 
 // Obtém o peso de uma aresta direcionada sem realizar verificações
 Peso obtemPesoArestaImpl(Grafo* g, int v1, int v2) {
-	// Obtém a primeira aresta adjacente de v1 para procurar v2
+	// Obtém a primeira aresta adjacente de v1
 	Aresta* aresta = g->listaAdj[v1];
 
+	// Iteramos todos os adjacentes de v1 para procurar v2
 	while (aresta) {
+		// Se encontramos a aresta para v2, obtemos o seu peso
 		if (aresta->vdest == v2) {
-			// Aresta encontrada, obtém seu peso
 			return aresta->peso;
 		}
 
@@ -129,6 +130,7 @@ Peso obtemPesoArestaImpl(Grafo* g, int v1, int v2) {
 		aresta = aresta->prox;
 	}
 
+	// Se passamos todo o laço, não havia aresta entre v1 e v2
 	return AN;
 }
 
@@ -154,6 +156,7 @@ bool removeArestaImpl(Grafo* g, int v1, int v2, Peso* peso) {
 		// Se não há anterior, a aresta que vamos remover está no início da lista
 		if (!ant) {
 			g->listaAdj[v1] = aresta->prox;
+		// Caso o contrário ela está no meio da lista mesmo
 		} else {
 			ant->prox = aresta->prox;
 		}
@@ -162,7 +165,7 @@ bool removeArestaImpl(Grafo* g, int v1, int v2, Peso* peso) {
 		return true;
 	}
 
-	// Não existia aresta entre v1 e v2
+	// Passamos todo o laço, então não existia aresta entre v1 e v2
 	return false;
 }
 
@@ -262,7 +265,7 @@ bool existeAresta(Grafo* g, int v1, int v2) {
 
 bool verificaVertice(Grafo* g, int v) {
 	if (v < 0 || v >= g->numVertices) {
-		fprintf(stderr, "Vértice [%i] ilegal: 0 <= v < %i\n", v, g->numVertices);
+		fprintf(stderr, "Vértice [%i] ilegal fora de 0 <= v <= %i\n", v, g->numVertices - 1);
 		return false;
 	}
 	return true;

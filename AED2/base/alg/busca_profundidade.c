@@ -9,7 +9,7 @@ BuscaAresta tipoAresta(Busca* busca, int vert, int adjacente);
 void visitaBP(Grafo*, Busca*, int, int);
 
 // Executa uma busca em profundidade no grafo
-void buscaProfundidade(Grafo* g, Callbacks calls, void* objeto) {
+void buscaProfundidade(Grafo* g, Acessos acessos, void* objeto) {
 	int numVertices = obtemNrVertices(g);
 
 	// Alocação e inicialização dos estados de cada vértice
@@ -26,9 +26,9 @@ void buscaProfundidade(Grafo* g, Callbacks calls, void* objeto) {
 		antecessor[i] = -1;
 	}
 
-	// Estrutura de busca global para o algoritmo
+	// Estrutura global de busca para o algoritmo
 	Busca busca = {
-		.calls = &calls,
+		.acessos = &acessos,
 		.objeto = objeto,
 		.tempo = &tempo,
 		.cor = cor,
@@ -37,7 +37,7 @@ void buscaProfundidade(Grafo* g, Callbacks calls, void* objeto) {
 		.antecessor = antecessor
 	};
 
-	// Visita cada vértice
+	// Visita cada vértice se ele não foi visitado ainda
 	for (int i = 0; i < numVertices; i++) {
 		if (cor[i] == BUSCA_BRANCO) {
 			printf("root: \n");
@@ -55,15 +55,15 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 	// Se o vértice já foi descoberto, não faz nada.
 	if (b->cor[vert] != BUSCA_BRANCO) return;
 
-	// Evento de descoberta: o vértice passa a ser cinza, incrementa o relógio global e
+	// -- EVENTO DESCOBERTA: O vértice passa a ser cinza, incrementa o relógio global e
 	// registra o tempo de descoberta
 	b->cor[vert] = BUSCA_CINZA;
 	b->tempoDesc[vert] = ++(*b->tempo);
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [+] Ini. t: %i\n", vert, b->tempoDesc[vert]);
-	if (b->calls->descoberta) {
-		b->calls->descoberta(b, vert);
+	if (b->acessos->descoberta) {
+		b->acessos->descoberta(b, vert);
 	}
 
 	// Pega o primeiro vértice alcançável por V para iterar por todos os alcançáveis
@@ -75,10 +75,10 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 		// Identifica o tipo de aresta de V -> A baseado no estado atual da busca
 		BuscaAresta tAresta = tipoAresta(b, vert, adjacente);
 
-		// Evento de descoberta de aresta: Notifica-se o callback.
+		// -- EVENTO ARESTA: Notifica-se o callback.
 		// Se ele determinar que não devemos seguir essa aresta, nós a pulamos
-		if (b->calls->aresta) {
-			bool seguir = b->calls->aresta(b, tAresta, vert, adjacente);
+		if (b->acessos->aresta) {
+			bool seguir = b->acessos->aresta(b, tAresta, vert, adjacente);
 			if (!seguir) continue;
 		}
 
@@ -109,14 +109,14 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 		}
 	}
 
-	// Evento de término: troca a cor do vértice para preto e incrementa o relógio global
+	// -- EVENTO FECHAMENTO: Troca a cor do vértice para preto e incrementa o relógio global
 	b->cor[vert] = BUSCA_PRETO;
 	b->tempoTerm[vert] = ++(*b->tempo);
 
 	printf("%*s", prof * 2, "");
 	printf("%i: [-] fim. t: %i\n", vert, b->tempoTerm[vert]);
-	if (b->calls->fechamento) {
-		b->calls->fechamento(b, vert);
+	if (b->acessos->fechamento) {
+		b->acessos->fechamento(b, vert);
 	}
 }
 

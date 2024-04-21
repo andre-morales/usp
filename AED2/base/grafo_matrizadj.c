@@ -81,6 +81,7 @@ bool verificaVertice(Grafo* g, int v) {
 	}
 
 	Peso obtemPesoAresta(Grafo* g, int v1, int v2) {
+		// Garante que os vértices são válidos
 		assert(verificaVertice(g, v1));
 		assert(verificaVertice(g, v2));
 

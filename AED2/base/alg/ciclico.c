@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 bool arestaDescoberta(Busca* busca, BuscaAresta tipoAresta, int vert, int dest) {
-	// O ponteiro de objeto da busca aponta para a flag que indica se o grafo por descoberto
+	// O ponteiro de objeto da busca aponta para a flag que indica se o grafo for descoberto
 	// como cíclico
 	bool* ciclico = (bool*)busca->objeto;
 

@@ -6,7 +6,7 @@ LIS: testa_lista
 testa_matriz: CFLAGS += -DGRAFO_MATRIZ=1
 testa_lista: CFLAGS += -DGRAFO_LISTA=1	
 
-ALG_OBJECTS = obj/le_grafo.o obj/busca_profundidade.o obj/ciclico.o
+ALG_OBJECTS = obj/le_grafo.o obj/busca_profundidade.o obj/ciclico.o obj/ordenacao_topologica.o
 
 testa_matriz: obj/grafo_matrizadj.o obj/testa_grafo.o $(ALG_OBJECTS)
 	gcc $(CFLAGS) -o prog_matriz.exe obj/grafo_matrizadj.o obj/testa_grafo.o $(ALG_OBJECTS)
@@ -28,6 +28,9 @@ obj/busca_profundidade.o: alg/busca_profundidade.c alg/busca_profundidade.h
 
 obj/ciclico.o: alg/ciclico.c alg/ciclico.h
 	gcc $(CFLAGS) -o obj/ciclico.o -c alg/ciclico.c
+
+obj/ordenacao_topologica.o: alg/ordenacao_topologica.c alg/ordenacao_topologica.h
+	gcc $(CFLAGS) -o obj/ordenacao_topologica.o -c alg/ordenacao_topologica.c
 
 obj/testa_grafo.o: testa_grafo.c grafo_matrizadj.h grafo_listaadj.h
 	gcc $(CFLAGS) -o obj/testa_grafo.o -c testa_grafo.c
