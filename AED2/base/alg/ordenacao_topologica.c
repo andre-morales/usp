@@ -1,5 +1,6 @@
 #include "ordenacao_topologica.h"
 #include "busca_profundidade.h"
+#include "busca.h"
 #include "../grafo.h"
 #include <stdio.h>
 
@@ -31,8 +32,14 @@ void ordenarTopologicamente(Grafo* grafo) {
 		.fechamento = fechamentoAresta
 	};
 
+	Busca busca;
+	inicializaBusca(&busca, grafo);
+
+	busca.acessos = acessos;
+	busca.objeto = &topl;
+
 	// Executa a busca em profundidade
-	buscaProfundidade(grafo, acessos, &topl);
+	buscaProfundidade(&busca);
 
 	// Imprime o vetor de ordenação em ordem reversa
 	int i = numVertices - 1;

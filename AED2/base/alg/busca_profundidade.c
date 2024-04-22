@@ -1,5 +1,6 @@
 #include "busca_profundidade.h"
-#include "../grafo.h"
+#include "busca.h"
+#include "grafo.h"
 #include <stdio.h>
 
 // Identifica o tipo de uma aresta
@@ -9,38 +10,16 @@ BuscaAresta tipoAresta(Busca* busca, int vert, int adjacente);
 void visitaBP(Grafo*, Busca*, int, int);
 
 // Executa uma busca em profundidade no grafo
-void buscaProfundidade(Grafo* g, Acessos acessos, void* objeto) {
+void buscaProfundidade(Busca* busca) {
+	Grafo* g = busca->grafo;
+
 	int numVertices = obtemNrVertices(g);
-
-	// Alocação e inicialização dos estados de cada vértice
-	BuscaCor cor[numVertices];
-	int tempoDesc[numVertices];
-	int tempoTerm[numVertices];
-	int antecessor[numVertices];
-
-	for (int i = 0; i < numVertices; i++) {
-		cor[i] = BUSCA_BRANCO;
-		tempoDesc[i] = 0;
-		tempoTerm[i] = 0;
-		antecessor[i] = -1;
-	}
-
-	// Estrutura global de busca para o algoritmo
-	Busca busca = {
-		.acessos = acessos,
-		.objeto = objeto,
-		.tempo = 0,
-		.cor = cor,
-		.tempoDesc = tempoDesc,
-		.tempoTerm = tempoTerm,
-		.antecessor = antecessor
-	};
 
 	// Visita cada vértice se ele não foi visitado ainda
 	for (int i = 0; i < numVertices; i++) {
-		if (cor[i] == BUSCA_BRANCO) {
+		if (busca->cor[i] == BUSCA_BRANCO) {
 			printf("root: \n");
-			visitaBP(g, &busca, i, 1);	
+			visitaBP(g, busca, i, 1);	
 		}
 	}
 }

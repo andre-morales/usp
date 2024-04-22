@@ -1,9 +1,7 @@
 #pragma once
-#include "busca.h"
-#include "../grafo_fwd.h"
+
+struct BuscaType;
+typedef struct BuscaType Busca;
 
 // Executa uma busca em profundidade no grafo dado.
-// grafo: Grafo alvo da busca
-// acessos: Estrutura de configuração de acessos
-// objeto: Um ponteiro opcional acessível durante a busca
-void buscaProfundidade(Grafo* grafo, Acessos acessos, void* objeto);
+void buscaProfundidade(Busca* busca);

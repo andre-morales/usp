@@ -1,5 +1,6 @@
 #include "grafo_ciclico.h"
 #include "busca_profundidade.h"
+#include "busca.h"
 #include "../grafo.h"
 #include <stddef.h>
 
@@ -25,13 +26,18 @@ bool arestaDescoberta(Busca* busca, BuscaAresta tipoAresta, int vert, int dest) 
 bool ehGrafoCiclico(Grafo* g) {
 	bool ciclico = false;
 
+	Busca busca;
+	inicializaBusca(&busca, g);
+
 	// Acessos do algoritmo. Estamos interessados no momento de investigação de uma aresta.
 	Acessos acessos = {
 		.descoberta = NULL,
 		.aresta = &arestaDescoberta,
 		.fechamento = NULL
 	};
-	buscaProfundidade(g, acessos, &ciclico);
+	busca.acessos = acessos;
+	busca.objeto = &ciclico;
+	buscaProfundidade(&busca);
 
 	return ciclico;
 }

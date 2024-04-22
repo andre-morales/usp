@@ -1,3 +1,10 @@
+/**
+ * Autor: André Morales
+ * Criação: 21/04/2024
+ * Modificação: 21/04/2024
+ * 
+ * Define uma estrutura de Fila de inteiros
+ **/
 #pragma once
 
 typedef struct self {

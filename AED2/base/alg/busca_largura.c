@@ -1,3 +1,10 @@
+/**
+ * Autor: André Morales
+ * Criação: 21/04/2024
+ * Modificação: 21/04/2024
+ * 
+ * Implementação de um algoritmo para busca em largura em um grafo genérico. Direcionado ou não.
+ **/
 #include "busca_largura.h"
 #include "../grafo.h"
 #include "busca.h"
@@ -84,4 +91,6 @@ void visitaBL(Grafo* grafo, Busca* b, int raiz) {
 
 		printf("%i: [-] Fim. t: %i\n", vert, b->tempoTerm[vert]);
 	}
+
+	liberaFila(&fila);
 }
