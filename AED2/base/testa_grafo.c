@@ -30,7 +30,7 @@ int main() {
 	Grafo grafo;
 	Grafo* g = &grafo;
 
-	teste6(g);
+	teste5(g);
 
 	liberaGrafo(g);
 }

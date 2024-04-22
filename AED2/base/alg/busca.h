@@ -32,10 +32,6 @@ typedef enum {
 	ARESTA_ARVORE, ARESTA_RETORNO, ARESTA_AVANCO, ARESTA_CRUZAMENTO
 } BuscaAresta;
 
-typedef void(*InicioFn)(Busca* busca);
-
-typedef void(*FimFn)(Busca* busca);
-
 // Tipo de função acesso de descoberta. Chamado assim que um vértice branco for descoberto
 typedef void(*DescobertaFn)(Busca* busca, int vert);
 
@@ -48,8 +44,6 @@ typedef bool(*ArestaFn)(Busca* busca, BuscaAresta tipoAresta, int vert, int adja
 
 // Objeto container para as três funções de acesso, definidas pelo usuário
 struct AcessosType {
-	InicioFn inicio;
-	FimFn fim;
 	DescobertaFn descoberta;
 	FechamentoFn fechamento;
 	ArestaFn aresta;
@@ -57,6 +51,8 @@ struct AcessosType {
 
 // Estrutura global de busca. Individual para cada invocação de busca, mas viva durante toda a busca
 struct BuscaType {
+	// -- Parâmetros da busca --
+
 	// Grafo alvo da busca
 	Grafo* grafo;
 
@@ -71,6 +67,8 @@ struct BuscaType {
 	// Objeto do usuário. Não será alterado ou acessado pelo mecanismo de busca.
 	void* objeto;
 	
+	// -- Estado da busca e resultados --
+
 	// Relógio do algoritmo de busca
 	int tempo;
 
@@ -91,5 +89,5 @@ struct BuscaType {
 };
 
 void inicializaBusca(Busca* busca, Grafo* grafo);
-
+void limpaBusca(Busca* busca);
 void liberaBusca(Busca* busca);

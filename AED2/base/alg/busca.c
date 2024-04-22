@@ -10,7 +10,6 @@ void inicializaBusca(Busca* b, Grafo* g) {
 	b->grafo = g;
 	b->acessos = acessos;
 	b->objeto = NULL;
-	b->tempo = 0;
 	b->inicio = 0;
 
 	b->cor = (BuscaCor*)malloc(sizeof(BuscaCor[numVertices]));
@@ -18,6 +17,15 @@ void inicializaBusca(Busca* b, Grafo* g) {
 	b->tempoTerm = (int*)malloc(sizeof(int[numVertices]));
 	b->antecessor = (int*)malloc(sizeof(int[numVertices]));
 	b->distancia = (int*)malloc(sizeof(int[numVertices]));
+
+	limpaBusca(b);
+}
+
+void limpaBusca(Busca* b) {
+	Grafo* g = b->grafo;
+	int numVertices = obtemNrVertices(g);
+
+	b->tempo = 0;
 
 	for (int i = 0; i < numVertices; i++) {
 		b->cor[i] = BUSCA_BRANCO;

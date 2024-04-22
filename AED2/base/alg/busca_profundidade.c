@@ -15,11 +15,17 @@ void buscaProfundidade(Busca* busca) {
 
 	int numVertices = obtemNrVertices(g);
 
+	// Se um início foi dado, visita apenas o início
+	if (busca->inicio != -1) {
+		printf("root: \n");
+		visitaBP(g, busca, busca->inicio, 1);
 	// Visita cada vértice se ele não foi visitado ainda
-	for (int i = 0; i < numVertices; i++) {
-		if (busca->cor[i] == BUSCA_BRANCO) {
-			printf("root: \n");
-			visitaBP(g, busca, i, 1);	
+	} else {
+		for (int i = 0; i < numVertices; i++) {
+			if (busca->cor[i] == BUSCA_BRANCO) {
+				printf("root: \n");
+				visitaBP(g, busca, i, 1);	
+			}
 		}
 	}
 }

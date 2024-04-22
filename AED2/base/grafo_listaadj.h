@@ -77,4 +77,5 @@ bool existeAresta(Grafo* grafo, int v1, int v2);
 // Retorna verdadeiro se a aresta existe, falso c.c
 bool removeAresta(Grafo* grafo, int v1, int v2, Peso* p);
 
-
+// Inverte a direção de todas as arestas no grafo
+void transporGrafo(Grafo* g);

@@ -40,6 +40,8 @@ bool inicializaGrafo(Grafo* g, int v) {
 	return true;
 }
 
+void liberaGrafo(Grafo* g) {}
+
 void imprimeGrafo(Grafo* g) {
 	// Print header
 	printf("-------- [%i %s %i] --------\n", g->numVertices, TIPO_GRAFO, g->numArestas);
@@ -180,7 +182,24 @@ Apontador proxListaAdj(Grafo* g, int v, Apontador atual) {
 	return VERTICE_INVALIDO;
 }
 
-void liberaGrafo(Grafo* g) {}
+void swap(int* a, int* b) {
+	int t = *a;
+	*a = *b;
+	*b = t;
+}
+
+void transporGrafo(Grafo* g) {
+	printf("inverting\n");
+	// Troca todas as arestas de X -> Y para Y -> X
+	for (int y = 0; y < g->numVertices; y++) {
+		for (int x = 0; x < y; x++) {
+			//Peso tmp = g->mat[y][x];
+			//g->mat[y][x] = g->mat[x][y];
+			//g->mat[x][y] = tmp;
+			swap(&g->mat[x][y], &g->mat[y][x]);
+		}
+	}
+}
 
 int obtemNrVertices(Grafo* grafo) {
 	return grafo->numVertices;

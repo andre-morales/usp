@@ -19,22 +19,13 @@ void buscaLargura(Busca* busca) {
 	Grafo* g = busca->grafo;
 	int numVertices = obtemNrVertices(g);
 
-	// Evento de início de busca
-	if (busca->acessos.inicio) {
-		busca->acessos.inicio(busca);
-	}
-
+	// Se um início foi dado, visite apenas o início. Caso contrário, visita todos os vértices
 	if (busca->inicio != -1) {
 		visitaBL(g, busca, busca->inicio);
 	} else {
 		for (int i = 0; i < numVertices; i++) {
 			visitaBL(g, busca, i);
 		}
-	}
-
-	// Evento de fim de busca
-	if (busca->acessos.fim) {
-		busca->acessos.fim(busca);
 	}
 }
 
