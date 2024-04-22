@@ -14,6 +14,7 @@
 #include "alg/busca_largura.h"
 #include "alg/componentes_conexos.h"
 #include "alg/caminho_curto.h"
+#include "alg/prim.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -25,14 +26,22 @@ void teste3(Grafo*);
 void teste4(Grafo*);
 void teste5(Grafo*);
 void teste6(Grafo*);
+void teste7(Grafo*);
 
 int main() {
 	Grafo grafo;
 	Grafo* g = &grafo;
 
-	teste5(g);
+	teste2(g);
 
 	liberaGrafo(g);
+}
+
+void testa7(Grafo* g){
+	leGrafo(g, "grafos/7.txt");
+	imprimeGrafo(g);
+
+	//prim(g);
 }
 
 // Testa encontrar caminhos mais curtos
@@ -91,7 +100,7 @@ void teste3(Grafo* g) {
 
 // Testa algoritmo de busca em profundidade
 void teste2(Grafo* g) {
-	leGrafo(g, "grafos/2.txt");
+	leGrafo(g, "grafos/3.txt");
 	imprimeGrafo(g);
 
 	Busca busca;
