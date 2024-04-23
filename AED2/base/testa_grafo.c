@@ -1,7 +1,7 @@
 /**
  * Autor: André Morales
  * Criação: 02/04/2024
- * Modificação: 22/04/2024
+ * Modificação: 23/04/2024
  * 
  * Arquivo de testes para as funções de grafo.
  **/
@@ -22,34 +22,43 @@
 
 void printAdjacentes(Grafo*, int);
 void pause();
+
+// Busca em profundidade
+void teste1(Grafo*);
+
+// Grafos cíclicos
 void teste2(Grafo*);
+
+// Ordenação topológica
 void teste3(Grafo*);
+
+// Componentes conexos
 void teste4(Grafo*);
+
+// Caminhos mais curtos
 void teste5(Grafo*);
+
+// Árvore geradora mínima -- Prim
 void teste6(Grafo*);
-void teste7(Grafo*);
 
 int main() {
 	Grafo grafo;
 	Grafo* g = &grafo;
 
-	teste3(g);
+	leGrafo(g, "grafos/5.txt");
+	imprimeGrafo(g);
+
+	teste2(g);
 
 	liberaGrafo(g);
 }
 
-void testa7(Grafo* g){
-	leGrafo(g, "grafos/7.txt");
-	imprimeGrafo(g);
-
+void teste6(Grafo* g){
 	//prim(g);
 }
 
 // Testa encontrar caminhos mais curtos
-void teste6(Grafo* g) {
-	leGrafo(g, "grafos/6.txt");
-	imprimeGrafo(g);
-
+void teste5(Grafo* g) {
 	const int origem = 0;
 	const int destino = 2;
 
@@ -71,27 +80,18 @@ void teste6(Grafo* g) {
 	}
 }
 
-void teste5(Grafo* g) {
-	leGrafo(g, "grafos/5.txt");
-	imprimeGrafo(g);
-
+void teste4(Grafo* g) {
 	componentesConexos(g);
 }
 
 // Testa ordenação topológica
-void teste4(Grafo* g) {
-	leGrafo(g, "grafos/4.txt");
-	imprimeGrafo(g);
-
+void teste3(Grafo* g) {
 	ordenarTopologicamente(g);
 }
 
 // Testa encontrar grafos cíclicos
-void teste3(Grafo* g) {
-	leGrafo(g, "grafos/3.txt");
-	imprimeGrafo(g);
-
-	bool ci = ehGrafoCiclico(g);
+void teste2(Grafo* g) {
+	bool ci = ehGrafoCiclico(g, true);
 	if (ci) {
 		printf("Cíclico\n");
 	} else {
@@ -100,10 +100,7 @@ void teste3(Grafo* g) {
 }
 
 // Testa algoritmo de busca em profundidade
-void teste2(Grafo* g) {
-	leGrafo(g, "grafos/2.txt");
-	imprimeGrafo(g);
-
+void teste1(Grafo* g) {
 	Busca busca;
 	inicializaBusca(&busca, g);
 

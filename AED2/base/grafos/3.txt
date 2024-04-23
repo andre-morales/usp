@@ -1,4 +1,4 @@
-# A7:42
+# A7:42 direcionado, cíclico
 
 6 9
 

@@ -1,4 +1,4 @@
-# A7:56, grafo direcionado
+# A7:56, grafo direcionado, acíclico
 
 10 14
 

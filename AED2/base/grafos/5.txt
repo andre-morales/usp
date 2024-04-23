@@ -1,4 +1,4 @@
-# A8:37, direcionado ABC -> 012
+# A8:37, direcionado ABC -> 012, cíclico
 #a b 0
 #b c 0
 #b e 0
