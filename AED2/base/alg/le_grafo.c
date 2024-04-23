@@ -32,6 +32,7 @@ void leGrafo(Grafo* g, char* arquivo) {
 	// Lê o cabeçalho do arquivo e cria o grafo
 	int numVertices, numArestas;
 	fscanf(str, "%i %i", &numVertices, &numArestas);
+
 	inicializaGrafo(g, numVertices);
 
 	// Lê cada aresta
