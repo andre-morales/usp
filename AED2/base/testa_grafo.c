@@ -14,6 +14,7 @@
 #include "alg/busca_largura.h"
 #include "alg/componentes_conexos.h"
 #include "alg/caminho_curto.h"
+#include "alg/union_find.h"
 #include "alg/prim.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,7 +33,7 @@ int main() {
 	Grafo grafo;
 	Grafo* g = &grafo;
 
-	teste2(g);
+	teste3(g);
 
 	liberaGrafo(g);
 }
@@ -100,31 +101,13 @@ void teste3(Grafo* g) {
 
 // Testa algoritmo de busca em profundidade
 void teste2(Grafo* g) {
-	leGrafo(g, "grafos/3.txt");
+	leGrafo(g, "grafos/2.txt");
 	imprimeGrafo(g);
 
 	Busca busca;
 	inicializaBusca(&busca, g);
 
 	buscaProfundidade(&busca);
-}
-
-void exIterarAdjacentes(Grafo* g) {
-	// Itera todos os adjacentes do vértice 4 por exemplo
-	int vert = 4;
-
-	// Primeiro adjacente
-	Apontador ap = primeiroListaAdj(g, vert);
-
-	while(apontadorValido(ap)) {
-		// Índice do vértice adjacente
-		int adjacente = verticeDestino(ap);
-
-		printf("Adjacente de %i é %i\n", vert, adjacente);
-
-		// Avança para o próximo adjacente
-		ap = proxListaAdj(g, vert, ap);
-	}
 }
 
 void pause() {

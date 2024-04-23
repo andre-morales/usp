@@ -33,6 +33,7 @@ typedef struct GrafoType {
 	Apontador* listaAdj;
 	int numVertices;
 	int numArestas;
+	int inicializado;
 } Grafo;
 
 bool inicializaGrafo(Grafo* grafo, int numVertices);

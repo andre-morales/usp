@@ -17,9 +17,15 @@
 #define TIPO_GRAFO "UND"
 #endif
 
+
+#define GRAFO_INICIALIZADO 0xBBC0FFEE
+
 void extraAssert(bool check);
 
 bool inicializaGrafo(Grafo* grafo, int nv) {
+	// Garantindo que o grafo nao foi inicializado antes
+	assert(grafo->inicializado != GRAFO_INICIALIZADO);
+
 	if (grafo == NULL) {
 		fprintf(stderr, "ERRO: inicializaGrafo() -- Grafo não pode ser nulo.\n");
 		return false;
@@ -29,6 +35,7 @@ bool inicializaGrafo(Grafo* grafo, int nv) {
 		return false;
 	}
 
+	grafo->inicializado = GRAFO_INICIALIZADO;
 	grafo->numArestas = 0;
 	grafo->numVertices = nv;
 	grafo->listaAdj = (Apontador*)calloc(nv, sizeof(Apontador));
@@ -36,11 +43,17 @@ bool inicializaGrafo(Grafo* grafo, int nv) {
 		fprintf(stderr, "ERRO: inicializaGrafo() -- Alocação falhou.\n");
 		return false;
 	}
+	for (int i = 0; i < nv; i++) {
+		grafo->listaAdj[i] = NULL;	
+	}
 	return true;
 }
 
 void liberaGrafo(Grafo* g) {
-	for (int v = 0; v < g->numVertices; g++) {
+	if (g->inicializado != GRAFO_INICIALIZADO) return;
+	g->inicializado = 0;
+
+	for (int v = 0; v < g->numVertices; v++) {
 		// Libera toda a lista de adjacência do vértice
 		Aresta* aresta = g->listaAdj[v];
 		while (aresta) {
@@ -50,8 +63,9 @@ void liberaGrafo(Grafo* g) {
 		}
 	}
 
-	// Libera o arranjo de todas as listas de adjacência
+	// Libera o arranjo de todas as listas de adjacência	
 	free(g->listaAdj);
+	printf("Grafo liberado.\n");
 }
 
 void imprimeGrafo(Grafo* g) {

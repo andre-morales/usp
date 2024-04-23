@@ -26,6 +26,7 @@ typedef struct GrafoType {
 	Peso mat[MAXNUMVERTICES][MAXNUMVERTICES];
 	int numVertices;
 	int numArestas;
+	int inicializado;
 } Grafo;
 
 // Inicializa o grafo alocado com o numero de vértices determinado

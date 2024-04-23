@@ -15,7 +15,12 @@
 #define TIPO_GRAFO "UND"
 #endif
 
+#define GRAFO_INICIALIZADO 0xAAC0FFEE
+
 bool inicializaGrafo(Grafo* g, int v) {
+	// Garantindo que o grafo nao foi inicializado antes
+	assert(g->inicializado != GRAFO_INICIALIZADO);
+
 	// Testes de sanidade
 	if (g == NULL) {
 		fprintf(stderr, "ERRO: inicializaGrafo()\n");
@@ -28,6 +33,7 @@ bool inicializaGrafo(Grafo* g, int v) {
 		return false;
 	}
 
+	g->inicializado = GRAFO_INICIALIZADO;
 	g->numVertices = v;
 	g->numArestas = 0;
 
@@ -40,7 +46,11 @@ bool inicializaGrafo(Grafo* g, int v) {
 	return true;
 }
 
-void liberaGrafo(Grafo* g) {}
+void liberaGrafo(Grafo* g) {
+	if (g->inicializado != GRAFO_INICIALIZADO) return;
+	g->inicializado = 0;
+	printf("Grafo liberado.\n");
+}
 
 void imprimeGrafo(Grafo* g) {
 	// Print header
