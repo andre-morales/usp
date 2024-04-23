@@ -148,6 +148,20 @@ void testeUnionFind() {
 	dsMakeSet(ds, c('G'));
 	dsMakeSet(ds, c('H'));
 
+	dsUnion(ds, c('A'), c('B'));
+	dsUnion(ds, c('C'), c('D'));
+	dsUnion(ds, c('A'), c('D'));
+
+	dsImprimeLetras(ds);
+
+	dsUnion(ds, c('E'), c('F'));
+	dsUnion(ds, c('G'), c('H'));
+	dsUnion(ds, c('G'), c('F'));
+
+	dsImprimeLetras(ds);
+
+	dsUnion(ds, c('A'), c('G'));
+
 	dsImprimeLetras(ds);
 
 }
