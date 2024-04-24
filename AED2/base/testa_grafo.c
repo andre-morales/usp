@@ -17,6 +17,7 @@
 #include "alg/prim.h"
 #include "alg/union_find.h"
 #include "alg/dijkstra.h"
+#include "alg/heap.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -45,6 +46,8 @@ void teste6(Grafo*);
 // Árvore geradora mínima -- Dijkstra
 void teste7(Grafo*);
 
+// Teste de heap mínimo
+void teste8(Grafo*);
 
 int main() {
 	Grafo grafo;
@@ -54,12 +57,23 @@ int main() {
 	leGrafo(g, "grafos/7.txt");
 	imprimeGrafo(g);
 
-	teste6(g);
+	teste8(g);
 
 	liberaGrafo(g);
 }
 
-void teste7(Grafo* g) {
+void teste8(Grafo* g) {
+	int pesos[] = {9, 2, 3, 4, 5};
+
+	int n = 5;
+
+	Heap heap;
+	heapInit(&heap, pesos, n);
+
+	heapPrint(&heap);
+}
+
+void teste7(Grafo* g){
 	ACM acm;
 	inicializaACM(&acm, g);
 
