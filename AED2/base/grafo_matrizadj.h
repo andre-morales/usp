@@ -66,6 +66,10 @@ bool listaAdjVazia(Grafo* g, int v);
 // Insere uma aresta com um peso no grafo
 void insereAresta(Grafo* g, int v1, int v2, Peso p);
 
+// Obtém o peso de uma aresta entre v1 e v2.
+// Se a aresta não existir, retorna o peso sentinela AN.
+Peso obtemPesoAresta(Grafo* grafo, int v1, int v2);
+
 // Verifica se existe uma aresta entre os vértices V1 e V2 no grafo
 bool existeAresta(Grafo* g, int v1, int v2);
 

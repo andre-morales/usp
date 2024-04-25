@@ -14,6 +14,7 @@
 #include "alg/busca_largura.h"
 #include "alg/componentes_conexos.h"
 #include "alg/caminho_curto.h"
+#include "alg/prim.h"
 #include "alg/union_find.h"
 #include "alg/dijkstra.h"
 #include <stdlib.h>
@@ -38,8 +39,11 @@ void teste4(Grafo*);
 // Caminhos mais curtos
 void teste5(Grafo*);
 
-// Árvore geradora mínima -- Dijkstra
+// Prim
 void teste6(Grafo*);
+
+// Árvore geradora mínima -- Dijkstra
+void teste7(Grafo*);
 
 
 int main() {
@@ -47,7 +51,7 @@ int main() {
 	Grafo* g = &grafo;
 
 	//leGrafo(g, "grafos/7.txt");
-	leGrafo(g, "grafos/.hid.8.txt");
+	leGrafo(g, "grafos/7.txt");
 	imprimeGrafo(g);
 
 	teste6(g);
@@ -55,12 +59,16 @@ int main() {
 	liberaGrafo(g);
 }
 
-void teste6(Grafo* g){
+void teste7(Grafo* g) {
 	ACM acm;
 	inicializaACM(&acm, g);
 
 	diCaminhos(&acm, 5);
 	diImprime(&acm);
+}
+
+void teste6(Grafo* g){
+	prim(g);
 }
 
 // Testa encontrar caminhos mais curtos
