@@ -2,6 +2,7 @@
 #include "busca.h"
 #include "grafo.h"
 #include <stdio.h>
+#include <stdarg.h>
 
 // Identifica o tipo de uma aresta
 BuscaAresta tipoAresta(Busca* busca, int vert, int adjacente);
@@ -9,23 +10,25 @@ BuscaAresta tipoAresta(Busca* busca, int vert, int adjacente);
 // Passo da busca
 void visitaBP(Grafo*, Busca*, int, int);
 
+static void dlog(const char* fmt, ...);
+
 // Executa uma busca em profundidade no grafo
 void buscaProfundidade(Busca* busca) {
 	Grafo* g = busca->grafo;
 
 	int numVertices = obtemNrVertices(g);
 
-	printf("----- Busca em Profundidade -----\n");
+	dlog("----- Busca em Profundidade -----\n");
 
 	// Se um início foi dado, visita apenas o início
 	if (busca->inicio != -1) {
-		printf("root: \n");
+		dlog("root: \n");
 		visitaBP(g, busca, busca->inicio, 1);
 	// Visita cada vértice se ele não foi visitado ainda
 	} else {
 		for (int i = 0; i < numVertices; i++) {
 			if (busca->cor[i] == BUSCA_BRANCO) {
-				printf("root: \n");
+				dlog("root: \n");
 				visitaBP(g, busca, i, 1);	
 			}
 		}
@@ -46,8 +49,8 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 	b->cor[vert] = BUSCA_CINZA;
 	b->tempoDesc[vert] = ++b->tempo;
 
-	printf("|%*s", prof * 2, "");
-	printf("%i: [+] Ini. t: %i\n", vert, b->tempoDesc[vert]);
+	dlog("|%*s", prof * 2, "");
+	dlog("%i: [+] Ini. t: %i\n", vert, b->tempoDesc[vert]);
 	if (b->acessos.descoberta) {
 		b->acessos.descoberta(b, vert);
 	}
@@ -65,20 +68,20 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 		// Imprime o tipo de aresta que foi encontrada
 		switch (tAresta) {
 		case ARESTA_ARVORE:
-			printf("|%*s", prof * 2, "");
-			printf("%i:  => %i ARV", vert, adjacente);
+			dlog("|%*s", prof * 2, "");
+			dlog("%i:  => %i ARV", vert, adjacente);
 			break;
 		case ARESTA_RETORNO:
-			printf("|%*s", prof * 2, "");
-			printf("%i:  => %i RET", vert, adjacente);
+			dlog("|%*s", prof * 2, "");
+			dlog("%i:  => %i RET", vert, adjacente);
 			break;
 		case ARESTA_AVANCO:
-			printf("|%*s", prof * 2, "");
-			printf("%i:  => %i AVN", vert, adjacente);
+			dlog("|%*s", prof * 2, "");
+			dlog("%i:  => %i AVN", vert, adjacente);
 			break;
 		case ARESTA_CRUZAMENTO:
-			printf("|%*s", prof * 2, "");
-			printf("%i:  => %i CRZ", vert, adjacente);
+			dlog("|%*s", prof * 2, "");
+			dlog("%i:  => %i CRZ", vert, adjacente);
 			break;
 		}
 
@@ -87,11 +90,11 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 		if (b->acessos.aresta) {
 			bool seguir = b->acessos.aresta(b, tAresta, vert, adjacente);
 			if (!seguir) {
-				printf(" :: SKIP\n");
+				dlog(" :: SKIP\n");
 				continue;
 			}
 		}
-		printf("\n");
+		dlog("\n");
 
 		// Se o vértice ainda não foi descoberto, salva-se o antecessor do adjacente e invoca
 		// o algoritmo recursivamente
@@ -105,8 +108,8 @@ void visitaBP(Grafo* grafo, Busca* b, int vert, int prof) {
 	b->cor[vert] = BUSCA_PRETO;
 	b->tempoTerm[vert] = ++b->tempo;
 
-	printf("|%*s", prof * 2, "");
-	printf("%i: [-] fim. t: %i\n", vert, b->tempoTerm[vert]);
+	dlog("|%*s", prof * 2, "");
+	dlog("%i: [-] fim. t: %i\n", vert, b->tempoTerm[vert]);
 	if (b->acessos.fechamento) {
 		b->acessos.fechamento(b, vert);
 	}
@@ -132,4 +135,13 @@ BuscaAresta tipoAresta(Busca* busca, int vert, int adjacente) {
 	// Caso contrário, o descobridor é mais novo que o descoberto e temos uma aresta
 	// de cruzamento, onde os dois vértices não tem relação de ancestralidade.
 	return ARESTA_CRUZAMENTO;
+}
+
+static void dlog(const char* fmt, ...) {
+	return;
+
+	va_list args;
+	va_start(args, fmt);
+	vfprintf(stdout, fmt, args);
+	va_end(args);
 }

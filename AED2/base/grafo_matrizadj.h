@@ -77,5 +77,14 @@ bool existeAresta(Grafo* g, int v1, int v2);
 // Retorna verdadeiro se a aresta existia, falso c.c
 bool removeAresta(Grafo* g, int v1, int v2, Peso* p);
 
+// Cria uma cópia profunda do grafo
+Grafo* clonarGrafo(Grafo* g);
+
 // Inverte a direção de todas as arestas no grafo
 void transporGrafo(Grafo* g);
+
+// Retorna verdadeiro se a implementação atual está usando grafos direcionados
+bool ehGrafoDirecionado(Grafo* g);
+
+// Remove todas as arestas envolvendo o vértice dado
+void limparVertice(Grafo* g, int vert);

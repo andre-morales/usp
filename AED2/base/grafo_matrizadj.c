@@ -6,7 +6,9 @@
  * Implementação das funções base para o grafo por matrizes de adjacência.
  **/
 #include "grafo_matrizadj.h"
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 
 #if GRAFO_DIRECIONADO
@@ -49,7 +51,6 @@ bool inicializaGrafo(Grafo* g, int v) {
 void liberaGrafo(Grafo* g) {
 	if (g->inicializado != GRAFO_INICIALIZADO) return;
 	g->inicializado = 0;
-	printf("Grafo liberado.\n");
 }
 
 void imprimeGrafo(Grafo* g) {
@@ -211,6 +212,28 @@ void transporGrafo(Grafo* g) {
 	}
 }
 
+Grafo* clonarGrafo(Grafo* g) {
+	int numVerts = g->numVertices;
+
+	Grafo* novo = (Grafo*) malloc(sizeof(Grafo));
+	inicializaGrafo(novo, numVerts);
+
+	for (int x = 0; x < numVerts; x++) {
+		for (int y = 0; y < numVerts; y++) {
+			novo->mat[x][y] = g->mat[x][y];
+		}
+	}
+	return novo;
+}
+
+void limparVertice(Grafo* g, int vert) {
+	int nv = g->numVertices;
+	for (int i = 0; i < nv; i++) {
+		g->mat[i][vert] = AN;
+		g->mat[vert][i] = AN;
+	}
+}
+
 int obtemNrVertices(Grafo* grafo) {
 	return grafo->numVertices;
 }
@@ -225,4 +248,12 @@ int verticeDestino(Apontador ap) {
 
 bool apontadorValido(Apontador ap) {
 	return ap != VERTICE_INVALIDO;
+}
+
+bool ehGrafoDirecionado(Grafo* g) {
+	#if GRAFO_DIRECIONADO
+	return true;
+	#else
+	return false;
+	#endif
 }

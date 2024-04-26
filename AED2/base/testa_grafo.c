@@ -18,6 +18,7 @@
 #include "alg/union_find.h"
 #include "alg/dijkstra.h"
 #include "alg/heap.h"
+#include "alg/vertices_articulacao.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -46,7 +47,6 @@ void teste6(Grafo*);
 // Árvore geradora mínima -- Dijkstra
 void teste7(Grafo*);
 
-// Teste de heap mínimo
 void teste8(Grafo*);
 
 int main() {
@@ -54,23 +54,18 @@ int main() {
 	Grafo* g = &grafo;
 
 	//leGrafo(g, "grafos/7.txt");
-	leGrafo(g, "grafos/7.txt");
+	leGrafo(g, "grafos/9.txt");
 	imprimeGrafo(g);
 
 	teste8(g);
 
 	liberaGrafo(g);
+	printf("Fim.");
 }
 
 void teste8(Grafo* g) {
-	int pesos[] = {9, 2, 3, 4, 5};
-
-	int n = 5;
-
-	Heap heap;
-	heapInit(&heap, pesos, n);
-
-	heapPrint(&heap);
+	//limparVertice(g, 0);
+	verticesArticulacao(g);
 }
 
 void teste7(Grafo* g){
@@ -109,7 +104,8 @@ void teste5(Grafo* g) {
 }
 
 void teste4(Grafo* g) {
-	componentesConexos(g);
+	int num = componentesConexos(g);
+	printf("Componentes conectados: %i\n", num);
 }
 
 // Testa ordenação topológica

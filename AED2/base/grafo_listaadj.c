@@ -277,6 +277,52 @@ bool existeAresta(Grafo* g, int v1, int v2) {
 	return obtemPesoAresta(g, v1, v2) != AN;
 }
 
+void limparVertice(Grafo* g, int vert) {
+	// Limpa a lista de adjacência de vert
+	int numAdjacentes = 0;
+	int numVizinhos = 0;
+	Aresta* ap = g->listaAdj[vert];
+	while(ap) {
+		Aresta* sv = ap;
+		ap = ap->prox;
+		free(sv);
+		numAdjacentes++;
+	}
+	g->listaAdj[vert] = NULL;
+
+	// Percorre a lista de adjacência de todos os vértices e verifica se algum deles aponta
+	// para vert
+	for (int i = 0; i < g->numVertices; i++) {
+		Aresta* ant = NULL;
+		Aresta* viz = g->listaAdj[i];
+		while (viz) {
+			Aresta* prox = viz->prox;
+
+			if (viz->vdest == vert) {
+				if (ant) {
+					ant->prox = viz->prox;
+				} else {
+					g->listaAdj[i] = viz->prox;
+				}
+
+				free(viz);
+				numVizinhos++;
+			}
+
+			ant = viz;
+			viz = prox;
+		}
+	}
+
+	#if GRAFO_DIRECIONADO
+		g->numArestas -= numVizinhos;
+		g->numArestas -= numAdjacentes;
+	#else
+		assert(numVizinhos == numAdjacentes);
+		g->numArestas -= numAdjacentes;
+	#endif
+}
+
 bool verificaVertice(Grafo* g, int v) {
 	if (v < 0 || v >= g->numVertices) {
 		fprintf(stderr, "Vértice [%i] ilegal fora de 0 <= v <= %i\n", v, g->numVertices - 1);
@@ -298,5 +344,13 @@ bool apontadorValido(Apontador ap) {
 void extraAssert(bool check) {
 	#if MORE_CHECKS
 	assert(check);
+	#endif
+}
+
+bool ehGrafoDirecionado(Grafo* g) {
+	#if GRAFO_DIRECIONADO
+	return true;
+	#else
+	return false;
 	#endif
 }

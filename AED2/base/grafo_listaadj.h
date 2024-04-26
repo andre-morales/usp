@@ -40,11 +40,11 @@ bool inicializaGrafo(Grafo* grafo, int numVertices);
 
 void liberaGrafo(Grafo* grafo);
 
-void imprimeGrafo(Grafo* grafo);
-
 int obtemNrVertices(Grafo* grafo);
 
 int obtemNrArestas(Grafo* grafo);
+
+void imprimeGrafo(Grafo* grafo);
 
 // Obtém um apontador para o primeiro vértice adjacente ao dado, se houver.
 Apontador primeiroListaAdj(Grafo* grafo, int vertice);
@@ -78,5 +78,15 @@ bool existeAresta(Grafo* grafo, int v1, int v2);
 // Retorna verdadeiro se a aresta existe, falso c.c
 bool removeAresta(Grafo* grafo, int v1, int v2, Peso* p);
 
+// Cria uma cópia profunda desse grafo
+Grafo* clonarGrafo(Grafo* g);
+
 // Inverte a direção de todas as arestas no grafo
 void transporGrafo(Grafo* g);
+
+// Retorna verdadeiro se a implementação atual está usando grafos direcionados
+bool ehGrafoDirecionado(Grafo* g);
+
+// Remove todas as arestas envolvendo o vértice dado
+void limparVertice(Grafo* g, int vert);
+
