@@ -8,7 +8,7 @@
 #include "busca_largura.h"
 #include "../grafo.h"
 #include "busca.h"
-#include "fila.h"
+#include "estr/fila.h"
 #include <stdio.h>
 
 // Passo da busca

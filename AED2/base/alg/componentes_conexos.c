@@ -2,7 +2,7 @@
 #include "grafo.h"
 #include "busca_profundidade.h"
 #include "busca.h"
-#include "lista.h"
+#include "estr/lista.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

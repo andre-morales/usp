@@ -15,9 +15,7 @@
 #include "alg/componentes_conexos.h"
 #include "alg/caminho_curto.h"
 #include "alg/prim.h"
-#include "alg/union_find.h"
 #include "alg/dijkstra.h"
-#include "alg/heap.h"
 #include "alg/vertices_articulacao.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -47,6 +45,7 @@ void teste6(Grafo*);
 // Árvore geradora mínima -- Dijkstra
 void teste7(Grafo*);
 
+// Vértices de articulação
 void teste8(Grafo*);
 
 int main() {
@@ -63,7 +62,6 @@ int main() {
 }
 
 void teste8(Grafo* g) {
-	//limparVertice(g, 0);
 	verticesArticulacao(g);
 }
 

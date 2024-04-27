@@ -1,7 +1,7 @@
 #include "vertices_articulacao.h"
 #include "componentes_conexos.h"
 #include "grafo.h"
-#include "lista.h"
+#include "estr/lista.h"
 #include <stdio.h>
 #include <stdlib.h>
 
