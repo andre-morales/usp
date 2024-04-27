@@ -53,8 +53,7 @@ int main() {
 	Grafo grafo;
 	Grafo* g = &grafo;
 
-	//leGrafo(g, "grafos/7.txt");
-	leGrafo(g, "grafos/9.txt");
+	leGrafo(g, "grafos/10.txt");
 	imprimeGrafo(g);
 
 	teste8(g);
@@ -104,7 +103,7 @@ void teste5(Grafo* g) {
 }
 
 void teste4(Grafo* g) {
-	int num = componentesConexos(g);
+	int num = componentesConexos(g, NULL);
 	printf("Componentes conectados: %i\n", num);
 }
 

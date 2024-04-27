@@ -65,7 +65,6 @@ void liberaGrafo(Grafo* g) {
 
 	// Libera o arranjo de todas as listas de adjacência	
 	free(g->listaAdj);
-	printf("Grafo liberado.\n");
 }
 
 void imprimeGrafo(Grafo* g) {
@@ -321,6 +320,23 @@ void limparVertice(Grafo* g, int vert) {
 		assert(numVizinhos == numAdjacentes);
 		g->numArestas -= numAdjacentes;
 	#endif
+}
+
+// Cria uma cópia profunda desse grafo
+Grafo* clonarGrafo(Grafo* g) {
+	Grafo* novo = (Grafo*)malloc(sizeof(Grafo));
+	inicializaGrafo(novo, g->numVertices);
+
+	for (int i = 0; i < g->numVertices; i++) {
+		Aresta* ar = g->listaAdj[i];
+		while (ar) {
+			insereArestaImpl(novo, i, ar->vdest, ar->peso);
+
+			ar = ar->prox;
+		}
+	}
+
+	return novo;
 }
 
 bool verificaVertice(Grafo* g, int v) {

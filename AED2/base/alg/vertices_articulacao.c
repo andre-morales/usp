@@ -1,26 +1,25 @@
 #include "vertices_articulacao.h"
 #include "componentes_conexos.h"
 #include "grafo.h"
+#include "lista.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 void verticesArticulacao(Grafo* g) {
-	// Subtrai-se 1 pois o vértice 0 é considerado um componente
-	int numComponentes = componentesConexos(g) - 1;
+	int numComponentes = componentesConexos(g, NULL);
 	printf("INITIAL_COMPS: %i\n", numComponentes);
 
 	int numVerts = obtemNrVertices(g);
 	for (int i = 0; i < numVerts; i++) {
-		printf("----- VERT %i --------\n", i);
-
+		printf(":: Vert %i\n", i);
 		Grafo* clone = clonarGrafo(g);
-		
+
 		limparVertice(clone, i);
 
-		// Subtrai-se 2 pois o vértice 0 e o vértice isolado são considerados componentes
-		int comps = componentesConexos(clone) - 2;
+		// Subtrai-se 1 pois agora isolado é considerado componentes
+		int comps = componentesConexos(clone, NULL) - 1;
 		if (comps != numComponentes) {
-			printf("## comps: %i\n", comps);
+			printf("## ARTI %i: [%i -> %i]\n", i, numComponentes, comps);
 		}
 		
 		liberaGrafo(clone);

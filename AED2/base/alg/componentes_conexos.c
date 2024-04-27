@@ -5,27 +5,44 @@
 #include "lista.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdarg.h>
 
-#define QUIET true
+#define QUIET false
 
 int componentesConexosDir(Grafo* g);
-int componentesConexosUnd(Grafo* g);
+int componentesConexosUnd(Grafo* g, Lista**);
 int maiorTempo(int vec[], int n);
 
 static void dlog(const char* fmt, ...);
 
-int componentesConexos(Grafo* g) {
+int componentesConexos(Grafo* g, Lista** componentesPtr) {
 	if (ehGrafoDirecionado(g)) {
 		return componentesConexosDir(g);
 	} else {
-		return componentesConexosUnd(g);
+		return componentesConexosUnd(g, componentesPtr);
 	}
 }
 
 // Encontra os componentes conexos de um grafo não direcionado
-int componentesConexosUnd(Grafo* g) {
+int componentesConexosUnd(Grafo* g, Lista** componentesPtr) {
 	const int numVertices = obtemNrVertices(g);
+
+	// Se há interesse em salvar os vértices de cada componente, inicializa o vetor de listas
+	// se o vetor passado pelo usuário for nulo
+	Lista* componentesArr = NULL;
+	if (componentesPtr) {
+		if (!*componentesPtr) {
+			// Cria o vetor de listas do tamanho do número de vértices
+			*componentesPtr = (Lista*)malloc(numVertices * sizeof(Lista));
+			
+			for (int i = 0; i < numVertices; i++) {
+				inicializaLista(&(*componentesPtr)[i]);
+			}
+		}
+
+		componentesArr = *componentesPtr;
+	}
 
 	// Objeto de busca que será utilizado para todas as buscas no grafo
 	Busca busca;
@@ -33,29 +50,41 @@ int componentesConexosUnd(Grafo* g) {
 
 	// Vetor de vértices sinalizando se foram explorados ou não
 	bool explorados[numVertices];
-	for (int i = 0; i < numVertices; i++) {
-		explorados[i] = false;
-	}
+	memset(explorados, 0, sizeof(bool[numVertices]));
 
-	// Inicializa uma busca em todos os vértices se não foram explorados ainda
+	// Inicializa uma busca em todos os vértices que não foram explorados ainda
 	int numComponentes = 0;
 	for (int i = 0; i < numVertices; i++) {
 		if (explorados[i]) continue;
 
-		// Reinicia a cor de todos os vértices para branco
 		dlog("R: %i\n", i);
+
+		// Reinicia a cor de todos os vértices para branco
 		limpaBusca(&busca);
 
 		// Executa uma busca a partir de I
 		busca.inicio = i;
 		buscaProfundidade(&busca);
 
+		// Obtém a lista de vértices do componente atual e limpa ela se há interesse em salvar
+		// os componentes
+		Lista* lista = NULL;
+		if (componentesPtr) {
+			lista = &componentesArr[numComponentes];
+			limpaLista(lista);
+		}
+
 		// Marca todos os vértices pretos como sendo parte do mesmo componente e como explorados
-		for (int k = 0; k < numVertices; k++) {
+		for (int k = numVertices - 1; k >= 0; k--) {
 			if (busca.cor[k] != BUSCA_PRETO) continue;
 
 			dlog("  v: %i\n", k);
+
+			// Marca o vértice como explorado e o insere na lista
 			explorados[k] = true;
+			if (componentesPtr) {
+				insereLista(lista, k);
+			}
 		}
 
 		numComponentes++;
