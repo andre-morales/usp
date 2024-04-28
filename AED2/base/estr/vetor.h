@@ -20,4 +20,5 @@ void vetorInicializar(Vetor* vet);
 void vetorLiberar(Vetor* vet);
 void vetorInserir(Vetor* vet, int n);
 void vetorLimpar(Vetor* vet);
+void vetorImprimir(Vetor* vet);
 void vetorCompactar(Vetor* vet);

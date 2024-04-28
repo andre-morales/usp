@@ -1,6 +1,6 @@
 CFLAGS = -Wall -std=c99 -DGRAFO_DIRECIONADO=0 -I.
 
-ALG_OBJECTS = obj/alg/vertices_articulacao.o obj/alg/le_grafo.o obj/alg/prim.o obj/alg/dijkstra.o obj/alg/union_find.o obj/alg/componentes_conexos.o obj/alg/busca.o obj/alg/busca_profundidade.o obj/alg/grafo_ciclico.o obj/alg/ordenacao_topologica.o obj/alg/busca_largura.o obj/alg/caminho_curto.o
+ALG_OBJECTS = obj/alg/.hid.saidas.o obj/alg/vertices_articulacao.o obj/alg/le_grafo.o obj/alg/prim.o obj/alg/dijkstra.o obj/alg/union_find.o obj/alg/componentes_conexos.o obj/alg/busca.o obj/alg/busca_profundidade.o obj/alg/grafo_ciclico.o obj/alg/ordenacao_topologica.o obj/alg/busca_largura.o obj/alg/caminho_curto.o
 ESTR_OBJECTS = obj/estr/vetor.o obj/estr/lista.o obj/estr/heap.o obj/estr/fila.o
 
 MAT: testa_matriz

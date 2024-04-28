@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#define QUIET false
+#define QUIET true
 
 int componentesConexosDir(Grafo* g);
 int componentesConexosUnd(Grafo* g, Lista**);

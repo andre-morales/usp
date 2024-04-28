@@ -32,9 +32,23 @@ void vetorCompactar(Vetor* vet) {
 	vet->dados = realloc(vet->dados, vet->capacidade * sizeof(int));
 }
 
+void vetorImprimir(Vetor* vet) {
+	if (vet->tamanho == 0) {
+		printf("[]");
+		return;
+	}
+
+	printf("[");
+	int i;
+	for (i = 0; i < vet->tamanho - 1; i++) {
+		printf("%i, ", vet->dados[i]);
+	}
+	printf("%i]", vet->dados[i]);
+}
+
 void _vetorExpandir(Vetor* vet) {
 	if (!vet->dados) {
-		vet->capacidade = 1;
+		vet->capacidade = 8;
 	} else {
 		vet->capacidade *= 2;		
 	}

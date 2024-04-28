@@ -1,4 +1,9 @@
 #pragma once
-#include "grafo_fwd.h"
 
-void verticesArticulacao(Grafo* g);
+struct GrafoType;
+typedef struct GrafoType Grafo;
+
+struct VetorT;
+typedef struct VetorT Vetor;
+
+int verticesArticulacao(Grafo* g, Vetor* vet);

@@ -17,6 +17,7 @@
 #include "alg/prim.h"
 #include "alg/dijkstra.h"
 #include "alg/vertices_articulacao.h"
+#include "estr/vetor.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -48,8 +49,11 @@ void teste7(Grafo*);
 // Vértices de articulação
 void teste8(Grafo*);
 
-int main() {
-	Grafo grafo;
+void saidas();
+
+int main(int, char**) {
+	saidas();
+	/*Grafo grafo;
 	Grafo* g = &grafo;
 
 	leGrafo(g, "grafos/10.txt");
@@ -57,12 +61,32 @@ int main() {
 
 	teste8(g);
 
-	liberaGrafo(g);
+	liberaGrafo(g);*/
 	printf("Fim.");
 }
 
 void teste8(Grafo* g) {
-	verticesArticulacao(g);
+	Busca busca;
+	inicializaBusca(&busca, g);
+	buscaProfundidade(&busca);
+
+	int ant = 4;
+	while (ant != -1) {
+		printf("%i ", ant);
+		ant = busca.antecessor[ant];
+	}
+	printf("\n");
+
+	// Vértices de articulação
+	Vetor vet;
+	vetorInicializar(&vet);
+	int numArticuladores = verticesArticulacao(g, &vet);
+	
+	printf("Total de %i Vértices de Articulação: ", numArticuladores);
+	vetorImprimir(&vet);
+	printf("\n");
+
+	vetorLiberar(&vet);
 }
 
 void teste7(Grafo* g){
