@@ -55,7 +55,7 @@ bool arestaDescoberta(Busca* busca, BuscaAresta tipoAresta, int vert, int dest) 
 
 bool ehGrafoCiclico(Grafo* g, bool todos) {
 	Busca busca;
-	inicializaBusca(&busca, g);
+	buscaInicializar(&busca, g);
 
 	// Acessos do algoritmo. Estamos interessados no momento de investigação de uma aresta.
 	busca.acessos.aresta =  &arestaDescoberta;
@@ -68,7 +68,7 @@ bool ehGrafoCiclico(Grafo* g, bool todos) {
 
 	buscaProfundidade(&busca);
 
-	liberaBusca(&busca);
+	buscaLiberar(&busca);
 
 	return objeto.ciclico;
 }

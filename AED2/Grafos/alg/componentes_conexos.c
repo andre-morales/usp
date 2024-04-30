@@ -2,7 +2,7 @@
 #include "grafo.h"
 #include "busca_profundidade.h"
 #include "busca.h"
-#include "estr/lista.h"
+#include "estr/vetor.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,12 +11,12 @@
 #define QUIET true
 
 int componentesConexosDir(Grafo* g);
-int componentesConexosUnd(Grafo* g, Lista**);
+int componentesConexosUnd(Grafo* g, Vetor**);
 int maiorTempo(int vec[], int n);
 
 static void dlog(const char* fmt, ...);
 
-int componentesConexos(Grafo* g, Lista** componentesPtr) {
+int componentesConexos(Grafo* g, Vetor** componentesPtr) {
 	if (ehGrafoDirecionado(g)) {
 		return componentesConexosDir(g);
 	} else {
@@ -25,19 +25,19 @@ int componentesConexos(Grafo* g, Lista** componentesPtr) {
 }
 
 // Encontra os componentes conexos de um grafo não direcionado
-int componentesConexosUnd(Grafo* g, Lista** componentesPtr) {
+int componentesConexosUnd(Grafo* g, Vetor** componentesPtr) {
 	const int numVertices = obtemNrVertices(g);
 
-	// Se há interesse em salvar os vértices de cada componente, inicializa o vetor de listas
-	// se o vetor passado pelo usuário for nulo
-	Lista* componentesArr = NULL;
+	// Se há interesse em salvar os vértices de cada componente, inicializa o array de vetores
+	// se o array passado pelo usuário for nulo
+	Vetor* componentesArr = NULL;
 	if (componentesPtr) {
 		if (!*componentesPtr) {
 			// Cria o vetor de listas do tamanho do número de vértices
-			*componentesPtr = (Lista*)malloc(numVertices * sizeof(Lista));
+			*componentesPtr = (Vetor*)malloc(numVertices * sizeof(Vetor));
 			
 			for (int i = 0; i < numVertices; i++) {
-				inicializaLista(&(*componentesPtr)[i]);
+				vetorInicializar(&(*componentesPtr)[i]);
 			}
 		}
 
@@ -46,7 +46,7 @@ int componentesConexosUnd(Grafo* g, Lista** componentesPtr) {
 
 	// Objeto de busca que será utilizado para todas as buscas no grafo
 	Busca busca;
-	inicializaBusca(&busca, g);
+	buscaInicializar(&busca, g);
 
 	// Vetor de vértices sinalizando se foram explorados ou não
 	bool explorados[numVertices];
@@ -60,37 +60,37 @@ int componentesConexosUnd(Grafo* g, Lista** componentesPtr) {
 		dlog("R: %i\n", i);
 
 		// Reinicia a cor de todos os vértices para branco
-		limpaBusca(&busca);
+		buscaLimpar(&busca);
 
 		// Executa uma busca a partir de I
 		busca.inicio = i;
 		buscaProfundidade(&busca);
 
-		// Obtém a lista de vértices do componente atual e limpa ela se há interesse em salvar
+		// Obtém o vetor de vértices do componente atual e limpa ele se há interesse em salvar
 		// os componentes
-		Lista* lista = NULL;
+		Vetor* vetor = NULL;
 		if (componentesPtr) {
-			lista = &componentesArr[numComponentes];
-			limpaLista(lista);
+			vetor = &componentesArr[numComponentes];
+			vetorLimpar(vetor);
 		}
 
 		// Marca todos os vértices pretos como sendo parte do mesmo componente e como explorados
-		for (int k = numVertices - 1; k >= 0; k--) {
+		for (int k = 0; k < numVertices; k++) {
 			if (busca.cor[k] != BUSCA_PRETO) continue;
 
 			dlog("  v: %i\n", k);
 
-			// Marca o vértice como explorado e o insere na lista
+			// Marca o vértice como explorado e o insere no vetor
 			explorados[k] = true;
 			if (componentesPtr) {
-				insereLista(lista, k);
+				vetorInserir(vetor, k);
 			}
 		}
 
 		numComponentes++;
 	}
 
-	liberaBusca(&busca);
+	buscaLiberar(&busca);
 	return numComponentes;
 }
 
@@ -101,7 +101,7 @@ int componentesConexosDir(Grafo* g) {
 	const int numVertices = obtemNrVertices(g);
 	
 	Busca busca;
-	inicializaBusca(&busca, g);
+	buscaInicializar(&busca, g);
 
 	// Executa uma busca em profundidade inicial para descobrir os tempos de término de busca
 	// para cada vértice
@@ -130,7 +130,7 @@ int componentesConexosDir(Grafo* g) {
 		dlog("\nComponente %i:\n", componente++);
 
 		// Reinicia o estado da busca para fazer uma nova usando o mesmo objeto
-		limpaBusca(&busca);
+		buscaLimpar(&busca);
 
 		// Começa uma nova busca em profundidade a partir do vertice de maior tempo
 		busca.inicio = vert;
@@ -150,7 +150,7 @@ int componentesConexosDir(Grafo* g) {
 	}
 
 	free(tempos);
-	liberaBusca(&busca);
+	buscaLiberar(&busca);
 #endif
 	return -1;
 }

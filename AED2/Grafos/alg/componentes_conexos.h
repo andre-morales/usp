@@ -1,7 +1,6 @@
 #pragma once
 #include "grafo_fwd.h"
 
-struct ListaT;
-typedef struct ListaT Lista;
+struct VetorT;
 
-int componentesConexos(Grafo* g, Lista** componentesPtr);
+int componentesConexos(Grafo* g, struct VetorT** componentesPtr);

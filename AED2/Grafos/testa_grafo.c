@@ -67,7 +67,7 @@ int main(int, char**) {
 
 void teste8(Grafo* g) {
 	Busca busca;
-	inicializaBusca(&busca, g);
+	buscaInicializar(&busca, g);
 	buscaProfundidade(&busca);
 
 	int ant = 4;
@@ -147,7 +147,7 @@ void teste2(Grafo* g) {
 // Testa algoritmo de busca em profundidade
 void teste1(Grafo* g) {
 	Busca busca;
-	inicializaBusca(&busca, g);
+	buscaInicializar(&busca, g);
 
 	buscaProfundidade(&busca);
 }

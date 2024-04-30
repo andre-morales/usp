@@ -1,8 +1,9 @@
 #include "busca.h"
 #include "grafo.h"
+#include "estr/vetor.h"
 #include <stdlib.h>
 
-void inicializaBusca(Busca* b, Grafo* g) {
+void buscaInicializar(Busca* b, Grafo* g) {
 	int numVertices = obtemNrVertices(g);
 
 	Acessos acessos = { NULL };
@@ -10,7 +11,7 @@ void inicializaBusca(Busca* b, Grafo* g) {
 	b->grafo = g;
 	b->acessos = acessos;
 	b->objeto = NULL;
-	b->inicio = 0;
+	b->inicio = -1;
 
 	b->cor = (BuscaCor*)malloc(sizeof(BuscaCor[numVertices]));
 	b->tempoDesc = (int*)malloc(sizeof(int[numVertices]));
@@ -18,10 +19,18 @@ void inicializaBusca(Busca* b, Grafo* g) {
 	b->antecessor = (int*)malloc(sizeof(int[numVertices]));
 	b->distancia = (int*)malloc(sizeof(int[numVertices]));
 
-	limpaBusca(b);
+	buscaLimpar(b);
 }
 
-void limpaBusca(Busca* b) {
+void buscaLiberar(Busca* b) {
+	free(b->cor);
+	free(b->tempoDesc); 
+	free(b->tempoTerm); 
+	free(b->antecessor);
+	free(b->distancia); 
+}
+
+void buscaLimpar(Busca* b) {
 	Grafo* g = b->grafo;
 	int numVertices = obtemNrVertices(g);
 
@@ -36,10 +45,23 @@ void limpaBusca(Busca* b) {
 	}
 }
 
-void liberaBusca(Busca* b) {
-	free(b->cor);
-	free(b->tempoDesc); 
-	free(b->tempoTerm); 
-	free(b->antecessor);
-	free(b->distancia); 
+int buscaObterCaminho(Busca* busca, int vert, Vetor* vetor) {
+	int nv = obtemNrVertices(busca->grafo);
+
+	int caminhoRev[nv];
+	int tamanho = 0;
+	int atual = vert;
+	while (atual != -1) {
+		caminhoRev[tamanho] = atual;
+		atual = busca->antecessor[atual];
+		tamanho++;
+	}
+
+	if (vetor) {
+		for (int i = 0; i < tamanho; i++) {
+			vetorInserir(vetor, caminhoRev[tamanho - i - 1]);
+		}
+	}
+
+	return tamanho;
 }

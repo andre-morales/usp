@@ -33,7 +33,7 @@ void ordenarTopologicamente(Grafo* grafo) {
 	};
 
 	Busca busca;
-	inicializaBusca(&busca, grafo);
+	buscaInicializar(&busca, grafo);
 
 	busca.acessos = acessos;
 	busca.objeto = &topl;

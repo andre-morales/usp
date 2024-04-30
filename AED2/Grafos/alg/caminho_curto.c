@@ -8,7 +8,7 @@
 int* caminhoCurto(Grafo* grafo, int origem, int destino) {
 	// Inicializa estrutura de busca
 	Busca busca;
-	inicializaBusca(&busca, grafo);
+	buscaInicializar(&busca, grafo);
 
 	// Configura a busca para iniciar no vértice de origem
 	busca.inicio = origem;

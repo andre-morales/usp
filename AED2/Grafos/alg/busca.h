@@ -88,6 +88,9 @@ struct BuscaType {
 	int* distancia;
 };
 
-void inicializaBusca(Busca* busca, Grafo* grafo);
-void limpaBusca(Busca* busca);
-void liberaBusca(Busca* busca);
+void buscaInicializar(Busca* busca, Grafo* grafo);
+void buscaLiberar(Busca* busca);
+void buscaLimpar(Busca* busca);
+
+struct VetorT;
+int buscaObterCaminho(Busca* busca, int vert, struct VetorT* caminho);
