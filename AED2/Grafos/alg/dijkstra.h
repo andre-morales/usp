@@ -6,7 +6,10 @@
  * Algoritmo de Dijkstra para a geração da árvore de caminhos mínimos
  **/
 #pragma once
-#include "grafo_fwd.h"
+#include <stdbool.h>
+
+struct GrafoT;
+typedef struct GrafoT Grafo;
 
 // Definição de Árvore de Caminhos Mínimos
 typedef struct {

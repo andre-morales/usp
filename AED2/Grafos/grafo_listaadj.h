@@ -29,7 +29,7 @@ typedef struct aresta {
 
 typedef Aresta* Apontador;
 
-typedef struct GrafoType {
+typedef struct GrafoT {
 	Apontador* listaAdj;
 	int numVertices;
 	int numArestas;

@@ -22,7 +22,7 @@
 
 typedef int Peso;
 typedef int Apontador;
-typedef struct GrafoType {
+typedef struct GrafoT {
 	Peso mat[MAXNUMVERTICES][MAXNUMVERTICES];
 	int numVertices;
 	int numArestas;

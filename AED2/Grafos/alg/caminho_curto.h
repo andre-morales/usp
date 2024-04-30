@@ -1,5 +1,16 @@
+/**
+ * Autor: André Morales
+ * Criação: 21/04/2024
+ * Modificação: 28/04/2024
+ * 
+ * Implementa um algoritmo para extrair o caminho mais curto entre dois vértices (origem e destino)
+ * em um grafo direcionado ou não direcionado. O caminho mais curto será o camihno que passa pelo
+ * menor número de arestas possível.
+ **/
 #pragma once
-#include "../grafo_fwd.h"
+
+struct GrafoT;
+typedef struct GrafoT Grafo;
 
 // Busca o caminho mais curto entre origem e destino, passando pelo menor número de arestas
 // possível. Se nenhum caminho existe, retorna NULL.

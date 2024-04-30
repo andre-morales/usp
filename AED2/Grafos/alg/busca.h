@@ -1,13 +1,15 @@
 /**
  * Autor: André Morales
  * Criação: 21/04/2024
- * Modificação: 21/04/2024
+ * Modificação: 28/04/2024
  * 
  * Define estruturas báscias para execução de buscas em largura ou profundidade em um grafo genérico
  **/
 #pragma once
-#include "../grafo_fwd.h"
 #include <stdbool.h>
+
+struct GrafoT;
+typedef struct GrafoT Grafo;
 
 struct AcessosType;
 typedef struct AcessosType Acessos;

@@ -1,4 +1,6 @@
 #pragma once
-#include "grafo_fwd.h"
+
+struct GrafoT;
+typedef struct GrafoT Grafo;
 
 void prim(Grafo* g);

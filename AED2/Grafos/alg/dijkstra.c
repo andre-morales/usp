@@ -119,14 +119,14 @@ int diExtrair(ACM* acm) {
 	return min;
 }
 
-static char c(int n) {
+/*static char c(int n) {
 	if (n == 0) return 's';
 	if (n == 1) return 't';
 	if (n == 2) return 'x';
 	if (n == 3) return 'y';
 	if (n == 4) return 'z';
 	return '@';
-}
+}*/
 
 void diImprime(ACM* acm) {
 	printf("--------- ACM: Dijkstra --------- \n");
