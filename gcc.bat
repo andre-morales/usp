@@ -1,1 +1,0 @@
-"C:\Program Files\mingw64\bin\gcc.exe" %*

@@ -52,16 +52,18 @@ void teste8(Grafo*);
 void saidas();
 
 int main(int, char**) {
-	saidas();
-	/*Grafo grafo;
+	//saidas();
+	Grafo grafo;
 	Grafo* g = &grafo;
 
 	leGrafo(g, "grafos/10.txt");
 	imprimeGrafo(g);
 
+	teste3(g);
+	teste7(g);
 	teste8(g);
 
-	liberaGrafo(g);*/
+	liberaGrafo(g);
 	printf("Fim.");
 }
 
@@ -131,6 +133,7 @@ void teste4(Grafo* g) {
 
 // Testa ordenação topológica
 void teste3(Grafo* g) {
+	printf("-- Ordenação topológica --\n");
 	ordenarTopologicamente(g);
 }
 

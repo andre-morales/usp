@@ -45,7 +45,7 @@ void leGrafo(Grafo* g, char* arquivo) {
 			exit(-1);
 		}
 
-		printf("Inserindo aresta %i:%i\n", v1, v2);
+		printf("Inserindo aresta %i:%i, peso: %i\n", v1, v2, peso);
 		insereAresta(g, v1, v2, peso);
 	}
 
