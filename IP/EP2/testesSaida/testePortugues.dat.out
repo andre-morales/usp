@@ -1,0 +1,20 @@
+Entre os jogos no formato "time local, time visitante, golslocal, golsvisitante" (gols local negativo encerra a entrada de dados)
+Posicao,Nome,Pontos Ganhos,Vitorias,Empates,Derrotas,Saldo de Gols,Gol Average
+1,Benfica,87,28,3,3,62,4.100
+2,Porto,85,27,4,3,51,3.318
+3,Braga,78,25,3,6,45,2.500
+4,SportingCP,74,23,5,6,39,2.219
+5,Arouca,54,15,9,10,-1,0.973
+6,VitóriadeGuimarães,53,16,5,13,-5,0.872
+7,Chaves,46,12,10,12,-5,0.875
+8,Famalicão,44,13,5,16,-8,0.830
+9,Boavista,44,12,8,14,-11,0.796
+10,CasaPia,41,11,8,15,-9,0.775
+11,Vizela,40,11,7,16,-4,0.895
+12,RioAve,40,10,10,14,-7,0.837
+13,GilVicente,37,10,7,17,-9,0.780
+14,Estoril,35,10,5,19,-15,0.688
+15,Portimonense,34,10,4,20,-23,0.521
+16,Marítimo,26,7,5,22,-31,0.508
+17,PaçosdeFerreira,23,6,5,23,-36,0.419
+18,SantaClara,22,5,7,22,-33,0.431

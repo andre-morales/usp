@@ -1,0 +1,10 @@
+Entre os jogos no formato "time local, time visitante, golslocal, golsvisitante" (gols local negativo encerra a entrada de dados)
+Posicao,Nome,Pontos Ganhos,Vitorias,Empates,Derrotas,Saldo de Gols,Gol Average
+1,botafogo,4,1,1,0,2,2.000
+2,fluminense,4,1,1,0,1,1.333
+3,corinthians,3,1,0,0,1,1.333
+4,sao paulo,1,0,1,0,0,1.000
+5,gremio,1,0,1,0,0,1.000
+6,inter,1,0,1,0,0,1.000
+7,palmeiras,1,0,1,1,-1,0.875
+8,flamengo,0,0,0,2,-3,0.250

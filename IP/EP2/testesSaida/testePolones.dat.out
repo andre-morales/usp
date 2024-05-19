@@ -1,0 +1,20 @@
+Entre os jogos no formato "time local, time visitante, golslocal, golsvisitante" (gols local negativo encerra a entrada de dados)
+Posicao,Nome,Pontos Ganhos,Vitorias,Empates,Derrotas,Saldo de Gols,Gol Average
+1,LechPoznań,74,22,8,4,43,2.792
+2,RakówCzęstochowa,69,20,9,5,30,2.000
+3,PogońSzczecin,65,18,11,5,32,2.032
+4,LechiaGdańsk,57,16,9,9,13,1.333
+5,PiastGliwice,54,15,9,10,8,1.216
+6,RadomiakRadom,48,11,15,8,2,1.050
+7,WisłaPłock,48,15,3,16,-3,0.941
+8,GórnikZabrze,47,13,8,13,0,1.000
+9,Cracovia,46,12,10,12,-2,0.952
+10,LegiaWarsaw,43,13,4,17,-2,0.958
+11,WartaPoznań,42,11,9,14,-3,0.921
+12,JagielloniaBiałystok,40,9,13,12,-11,0.780
+13,ZagłębieLubin,38,11,5,18,-16,0.729
+14,StalMielec,37,9,10,15,-13,0.750
+15,ŚląskWrocław,35,7,14,13,-10,0.808
+16,Bruk-BetTermalicaNieciecza,32,7,11,16,-20,0.643
+17,WisłaKraków,31,7,10,17,-17,0.685
+18,GórnikŁęczna,28,6,10,18,-31,0.483
