@@ -1,6 +1,7 @@
-# Algoritmos e Simulações de Grafos de AED-II
+# Algoritmos e Simulações de Grafos de AED-II / EP1
 
-O projeto atual implementa em C vários algoritmos e funções que manipulam grafos visando o estudo desses algoritmos. O uso de grafos direcionados ou não-direcionados pode ser configurado.
+O projeto atual implementa em C vários algoritmos e funções que manipulam grafos visando o estudo desses algoritmos. Vários desses algoritmos são fundamentais para a construção do EP1.
+Os algoritmos e estruturas lidam tanto com grafos direcionados quanto não direcionados.
 
 Algoritmos implementados:
 * Construção de grafo por arquivo de definições
