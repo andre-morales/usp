@@ -1,4 +1,8 @@
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 /**
 	Esta classe representa a bola usada no jogo. A classe princial do jogo (Pong)
@@ -7,10 +11,15 @@ import java.awt.Color;
 
 public class Ball {
 
+	private Point2D.Double start;
 	private double cx, cy;
 	private double width, height;
 	private double speed;
+	private double direction;
 	private Color color;
+	private int frameCounter;
+	private int fps;
+	private long lastFPS;
 	
 	/**
 		Construtor da classe Ball. Observe que quem invoca o construtor desta classe define a velocidade da bola 
@@ -27,10 +36,15 @@ public class Ball {
 	public Ball(double cx, double cy, double width, double height, Color color, double speed){
 		this.cx = cx;
 		this.cy = cy;
+		start = new Point.Double(cx, cy);
 		this.width = width;
 		this.height = height;
 		this.color = color;
 		this.speed = speed;
+
+		// Gera um ângulo aleatório
+		reset();
+		lastFPS = System.currentTimeMillis();
 	}
 
 	/**
@@ -47,7 +61,11 @@ public class Ball {
 		@param delta quantidade de millisegundos que se passou entre o ciclo anterior de atualização do jogo e o atual.
 	*/
 	public void update(long delta){
-
+		double radsAngle = Math.toRadians(direction);
+		cx += Math.cos(radsAngle) * speed * delta;
+		cy += Math.sin(radsAngle) * speed * delta;
+		
+		//countFPS(delta);
 	}
 
 	/**
@@ -75,7 +93,19 @@ public class Ball {
 		@return um valor booleano que indica a ocorrência (true) ou não (false) de colisão.
 	*/
 	public boolean checkCollision(Wall wall){
-		return false;
+		var wallRect = getWallRect(wall);
+		var ballRect = getBallRect();
+		boolean collides = boxCollide(wallRect, ballRect);
+		if (collides) {
+			if (isWideWall(wall)) {
+				reflect(true);	
+			}
+
+			if (isTallWall(wall)){
+				reset();
+			}
+		}
+		return collides;
 	}
 
 	/**
@@ -85,7 +115,13 @@ public class Ball {
 		@return um valor booleano que indica a ocorrência (true) ou não (false) de colisão.
 	*/	
 	public boolean checkCollision(Player player){
-		return false;
+		var playerRect = getPlayerRect(player);
+		var ballRect = getBallRect();
+		boolean collides = boxCollide(playerRect, ballRect);
+		if (collides) {
+			reflect(false);
+		}
+		return collides;
 	}
 
 	/**
@@ -113,4 +149,71 @@ public class Ball {
 		return speed;
 	}
 
+	private void countFPS(double delta) {
+		frameCounter++;
+		long now = System.currentTimeMillis(); 
+		if (now - lastFPS > 1000) {
+			fps = frameCounter;
+			frameCounter = 0;
+			lastFPS = now;
+			System.out.println("FPS: " + fps + " IDELT: " + (1.0 / (delta / 1000.0)));
+		}
+	}
+
+	private static boolean isTallWall(Wall wall) {
+		var id = wall.getId();
+		return id.equals("Left") || id.equals("Right");
+	}
+
+	private static boolean isWideWall(Wall wall) {
+		var id = wall.getId();
+		return id.equals("Top") || id.equals("Bottom");
+	}
+
+	private void reflect(boolean horizontal) {
+		if (horizontal) {
+			direction = 360 - direction;
+		} else {
+			direction = 180 - direction;
+		}
+	}
+
+	private void reset() {
+		cx = start.x;
+		cy = start.y;
+		direction = Math.random() * 360;
+		//direction = 300;
+	}
+
+	private static Rectangle2D getWallRect(Wall wall) {
+		double cx_ = wall.getCx() - wall.getWidth() / 2;
+		double cy_ = wall.getCy() - wall.getHeight() / 2;
+		return new Rectangle2D.Double(cx_, cy_, wall.getWidth(), wall.getHeight());
+	}
+
+	private Rectangle2D getBallRect() {
+		double x = cx - width / 2;
+		double y = cy - height / 2;
+		return new Rectangle2D.Double(x, y, width, height);
+	}
+
+	private Rectangle2D getPlayerRect(Player player) {
+		double cx_ = player.getCx() - player.getWidth() / 2;
+		double cy_ = player.getCy() - player.getHeight() / 2;
+		return new Rectangle2D.Double(cx_, cy_, player.getWidth(), player.getHeight());
+	}
+
+	/** Verifica se dois retângulos possuem interseção */
+	private static boolean boxCollide(Rectangle2D A, Rectangle2D B) {
+		return A.intersects(B);
+		
+	}
+
+	/*public static class Square extends Rectangle2D.Double {
+		private Rectangle2D.Double rect;
+
+		public Square(double cx, double cy, double w, double h) {
+			rect = new Rectangle2D.Double(cx - w / 2, cy - h / 2, w, h);
+		}
+	}*/
 }

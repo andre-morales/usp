@@ -28,8 +28,9 @@ public class Score {
 	public void draw(){
 		// Player 1 a esquerda, player 2 a direita
 		int alignment = GameLib.ALIGN_LEFT;
-		if (playerId == 2)
+		if (playerId == 2 || playerName.equals("Player 2")) {
 			alignment = GameLib.ALIGN_RIGHT;
+		}
 
 		GameLib.drawText("" + score, 70, alignment);			
 	}

@@ -12,7 +12,7 @@ public class Player {
 	private Color color;
 	private String id;
 	private double speed;
-
+	private double[] bounds;
 	/**
 		Construtor da classe Player.
 
@@ -33,6 +33,7 @@ public class Player {
 		this.color = color;
 		this.id = id;
 		this.speed = speed;
+		this.bounds = v_limit;
 	}
 
 	/**
@@ -51,7 +52,8 @@ public class Player {
 		@param delta quantidade de millisegundos que se passou entre o ciclo anterior de atualização do jogo e o atual.
 	*/
 	public void moveUp(long delta){
-
+		cy -= speed * delta;
+		boundY();
 	}
 
 	/**
@@ -62,7 +64,8 @@ public class Player {
 		@param delta quantidade de millisegundos que se passou entre o ciclo anterior de atualização do jogo e o atual.
 	*/
 	public void moveDown(long delta){
-
+		cy += speed * delta;
+		boundY();
 	}
 
 	/**
@@ -103,5 +106,13 @@ public class Player {
 	*/
 	public double getCy() { 
 		return cy;
+	}
+
+	/** Limita a posição Y do jogador dentro da caixa */
+	private void boundY() {
+		double minY = bounds[0] + height / 2;
+		double maxY = bounds[1] - height / 2;
+		if (cy < minY) cy = minY;
+		if (cy > maxY) cy = maxY;
 	}
 }
