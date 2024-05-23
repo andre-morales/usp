@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Color;
 
 /**
 	Esta classe representa os jogadores (players) do jogo. A classe princial do jogo (Pong)
@@ -6,6 +6,12 @@ import java.awt.*;
 */
 
 public class Player {
+
+	private double cx, cy;
+	private double width, height;
+	private Color color;
+	private String id;
+	private double speed;
 
 	/**
 		Construtor da classe Player.
@@ -19,19 +25,22 @@ public class Player {
 		@param v_limit um array de double contendo dois valores (em pixels) que determinam os limites verticais da área útil da quadra.   
 		@param speed velocidade do movimento vertical do player (em pixels por millisegundo).
 	*/
-
-	public Player(double cx, double cy, double width, double height, Color color, String id, double [] v_limit, double speed){
-		
+	public Player(double cx, double cy, double width, double height, Color color, String id, double[] v_limit, double speed){
+		this.cx = cx;
+		this.cy = cy;
+		this.width = width;
+		this.height = height;
+		this.color = color;
+		this.id = id;
+		this.speed = speed;
 	}
 
 	/**
 		Método chamado sempre que o player precisa ser (re)desenhado.
 	*/
-
 	public void draw(){
-
-		GameLib.setColor(Color.GREEN);
-		GameLib.fillRect(80, 300, 20, 100);
+		GameLib.setColor(color);
+		GameLib.fillRect(cx, cy, width, height);
 	}
 
 	/**
@@ -41,7 +50,6 @@ public class Player {
 
 		@param delta quantidade de millisegundos que se passou entre o ciclo anterior de atualização do jogo e o atual.
 	*/
-
 	public void moveUp(long delta){
 
 	}
@@ -53,7 +61,6 @@ public class Player {
 
 		@param delta quantidade de millisegundos que se passou entre o ciclo anterior de atualização do jogo e o atual.
 	*/
-
 	public void moveDown(long delta){
 
 	}
@@ -62,50 +69,39 @@ public class Player {
 		Método que devolve a string de identificação do player.
 		@return a String de indentificação.
 	*/
-
 	public String getId() { 
-
-		return ""; 
+		return id; 
 	}
 
 	/**
 		Método que devolve a largura do retangulo que representa o player.
 		@return um double com o valor da largura.
 	*/
-
 	public double getWidth() { 
-
-		return 20; 
+		return width; 
 	}
 
 	/**
 		Método que devolve a algura do retangulo que representa o player.
 		@return um double com o valor da altura.
 	*/
-
 	public double getHeight() { 
-
-		return 100;
+		return height;
 	}
 
 	/**
 		Método que devolve a coordenada x do centro do retangulo que representa o player.
 		@return o valor double da coordenada x.
 	*/
-
 	public double getCx() { 
-		
-		return 80;
+		return cx;
 	}
 
 	/**
 		Método que devolve a coordenada y do centro do retangulo que representa o player.
 		@return o valor double da coordenada y.
 	*/
-
 	public double getCy() { 
-	
-		return 300;
+		return cy;
 	}
 }
-
