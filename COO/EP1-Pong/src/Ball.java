@@ -1,8 +1,6 @@
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 /**
 	Esta classe representa a bola usada no jogo. A classe princial do jogo (Pong)
@@ -74,7 +72,7 @@ public class Ball {
 		@param playerId uma string cujo conteúdo identifica um dos jogadores.
 	*/
 	public void onPlayerCollision(String playerId){
-
+		reflect(false);
 	}
 
 	/**
@@ -83,7 +81,15 @@ public class Ball {
 		@param wallId uma string cujo conteúdo identifica uma das paredes da quadra.
 	*/
 	public void onWallCollision(String wallId){
+		// Se bateu numa parede do topo ou de baixo, reflita a direção da bola
+		if (isWideWall(wallId)) {
+			reflect(true);	
+		}
 
+		// Se bateu na parede lateral, reinicie a posição da bola
+		if (isTallWall(wallId)){
+			reset();
+		}
 	}
 
 	/**
@@ -93,18 +99,9 @@ public class Ball {
 		@return um valor booleano que indica a ocorrência (true) ou não (false) de colisão.
 	*/
 	public boolean checkCollision(Wall wall){
-		var wallRect = getWallRect(wall);
-		var ballRect = getBallRect();
-		boolean collides = boxCollide(wallRect, ballRect);
-		if (collides) {
-			if (isWideWall(wall)) {
-				reflect(true);	
-			}
-
-			if (isTallWall(wall)){
-				reset();
-			}
-		}
+		var wallRect = Box.ofWall(wall);
+		var ballRect = Box.ofBall(this);
+		boolean collides = wallRect.intersects(ballRect);
 		return collides;
 	}
 
@@ -115,12 +112,9 @@ public class Ball {
 		@return um valor booleano que indica a ocorrência (true) ou não (false) de colisão.
 	*/	
 	public boolean checkCollision(Player player){
-		var playerRect = getPlayerRect(player);
-		var ballRect = getBallRect();
-		boolean collides = boxCollide(playerRect, ballRect);
-		if (collides) {
-			reflect(false);
-		}
+		var playerRect = Box.ofPlayer(player);
+		var ballRect = Box.ofBall(this);
+		boolean collides = playerRect.intersects(ballRect);
 		return collides;
 	}
 
@@ -140,6 +134,14 @@ public class Ball {
 		return cy;
 	}
 
+	public double getWidth() {
+		return width;
+	}
+
+	public double getHeight() {
+		return height;
+	}
+
 	/**
 		Método que devolve a velocidade da bola.
 		@return o valor double da velocidade.
@@ -149,6 +151,7 @@ public class Ball {
 		return speed;
 	}
 
+	@SuppressWarnings("unused")
 	private void countFPS(double delta) {
 		frameCounter++;
 		long now = System.currentTimeMillis(); 
@@ -160,16 +163,15 @@ public class Ball {
 		}
 	}
 
-	private static boolean isTallWall(Wall wall) {
-		var id = wall.getId();
+	private static boolean isTallWall(String id) {
 		return id.equals("Left") || id.equals("Right");
 	}
 
-	private static boolean isWideWall(Wall wall) {
-		var id = wall.getId();
+	private static boolean isWideWall(String id) {
 		return id.equals("Top") || id.equals("Bottom");
 	}
 
+	/** Reflete a bola em relação a uma parede horizontal ou vertical */
 	private void reflect(boolean horizontal) {
 		if (horizontal) {
 			direction = 360 - direction;
@@ -178,42 +180,14 @@ public class Ball {
 		}
 	}
 
+	/** Reinicia a bola no meio do campo com uma direção aleatória */
 	private void reset() {
 		cx = start.x;
 		cy = start.y;
-		direction = Math.random() * 360;
+
+		boolean randomBool = Math.random() > 0.5;
+		double angle = Math.random() * 90 - 45;
+		direction = (randomBool) ? angle : 180 - angle;
 		//direction = 300;
 	}
-
-	private static Rectangle2D getWallRect(Wall wall) {
-		double cx_ = wall.getCx() - wall.getWidth() / 2;
-		double cy_ = wall.getCy() - wall.getHeight() / 2;
-		return new Rectangle2D.Double(cx_, cy_, wall.getWidth(), wall.getHeight());
-	}
-
-	private Rectangle2D getBallRect() {
-		double x = cx - width / 2;
-		double y = cy - height / 2;
-		return new Rectangle2D.Double(x, y, width, height);
-	}
-
-	private Rectangle2D getPlayerRect(Player player) {
-		double cx_ = player.getCx() - player.getWidth() / 2;
-		double cy_ = player.getCy() - player.getHeight() / 2;
-		return new Rectangle2D.Double(cx_, cy_, player.getWidth(), player.getHeight());
-	}
-
-	/** Verifica se dois retângulos possuem interseção */
-	private static boolean boxCollide(Rectangle2D A, Rectangle2D B) {
-		return A.intersects(B);
-		
-	}
-
-	/*public static class Square extends Rectangle2D.Double {
-		private Rectangle2D.Double rect;
-
-		public Square(double cx, double cy, double w, double h) {
-			rect = new Rectangle2D.Double(cx - w / 2, cy - h / 2, w, h);
-		}
-	}*/
 }
