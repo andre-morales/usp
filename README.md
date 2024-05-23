@@ -11,3 +11,4 @@ O repositório atual está organizado por disciplinas, a organização de cada d
 |AED2|Algoritmos de Grafos para a construção do EP1|
 |OAC1|Emulador visual e interativo de CPU 16 bits, EP1
 ||https://github.com/andre-morales/emulador-oac|
+|COO|EP1 (Pong)|
