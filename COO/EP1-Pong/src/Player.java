@@ -21,7 +21,7 @@ public class Player {
 	*/
 
 	public Player(double cx, double cy, double width, double height, Color color, String id, double [] v_limit, double speed){
-	
+		
 	}
 
 	/**

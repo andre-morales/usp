@@ -1,16 +1,33 @@
+# MAKEFILE DO EP1
+# Targets: build, run
+
+CLASS_PATH="lib/GameLib.jar;src;"
+
+## Descomentar se necesário para colocar a JDK aqui!
+## JDK_HOME=C:\\Program Files\\Java\\jdk-17\\ 
+
+# Caminho do caminho JAR do java. Apenas usado para compilar o GameLib.jar
+JAVA_JAR=$(JDK_HOME)bin/jar
+
 default: build
 
+# Roda o EP sem depurador.
 run: build
-	java -cp build;lib; Pong
+	java -cp "output;lib/GameLib.jar;" Pong
 
-build: build/Player.class build/Ball.class build/Score.class
+# Constrói todos os .class necessários mas não executa nada
+build: output/Player.class output/Ball.class output/Score.class
 
-build/Player.class: src/Player.java
-	javac src/Player.java -d build --class-path lib
+# Constrói um .class a partir de um .java
+output/%.class: src/%.java
+	javac $< -d output --class-path $(CLASS_PATH)
 
-build/Ball.class: src/Ball.java
-	javac src/Ball.java -d build --class-path lib	
-
-build/Score.class: src/Score.java
-	javac src/Score.java -d build --class-path lib
+# GameLib: Biblioteca .jar com as classes entregues pelo professor, anexadas do javadoc
+gamelib: lib/GameLib.jar
 	
+# Invoca o comando jar da JDK e inclui todos os arquivos das pastas classes e javadoc no .jar
+lib/GameLib.jar:
+	$(JAVA_JAR) cvf lib/GameLib.jar -C lib/classes . -C lib/javadoc .
+
+clean:
+	del output\\*.class

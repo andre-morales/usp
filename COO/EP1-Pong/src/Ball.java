@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 /**
 	Esta classe representa a bola usada no jogo. A classe princial do jogo (Pong)
@@ -19,19 +21,16 @@ public class Ball {
 		@param color cor da bola.
 		@param speed velocidade da bola (em pixels por millisegundo).
 	*/
-
 	public Ball(double cx, double cy, double width, double height, Color color, double speed){
 	
 	}
 
-
 	/**
 		Método chamado sempre que a bola precisa ser (re)desenhada.
 	*/
-
 	public void draw(){
-
-		GameLib.setColor(Color.YELLOW);
+		
+		GameLib.setColor(Color.RED);
 		GameLib.fillRect(400, 300, 20, 20);
 	}
 
