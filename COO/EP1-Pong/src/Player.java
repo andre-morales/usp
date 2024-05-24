@@ -6,11 +6,12 @@ import java.awt.Color;
 */
 
 public class Player {
-
+	private static int playerIndexCounter;
 	private double cx, cy;
 	private double width, height;
 	private Color color;
 	private String id;
+	private int index;
 	private double speed;
 	private double[] bounds;
 	/**
@@ -31,6 +32,8 @@ public class Player {
 		this.width = width;
 		this.height = height;
 		this.color = color;
+		++playerIndexCounter;
+		this.index = playerIndexCounter;
 		this.id = id;
 		this.speed = speed;
 		this.bounds = v_limit;
@@ -74,6 +77,10 @@ public class Player {
 	*/
 	public String getId() { 
 		return id; 
+	}
+
+	public int getIndex() {
+		return index;
 	}
 
 	/**

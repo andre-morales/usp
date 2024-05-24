@@ -14,6 +14,7 @@ public class Ball {
 	private double width, height;
 	private double speed;
 	private double direction;
+	private double dirX, dirY;
 	private Color color;
 	private int frameCounter;
 	private int fps;
@@ -38,7 +39,7 @@ public class Ball {
 		this.width = width;
 		this.height = height;
 		this.color = color;
-		this.speed = speed;
+		this.speed = speed * 0.5;
 
 		// Gera um ângulo aleatório
 		reset();
@@ -59,10 +60,8 @@ public class Ball {
 		@param delta quantidade de millisegundos que se passou entre o ciclo anterior de atualização do jogo e o atual.
 	*/
 	public void update(long delta){
-		double radsAngle = Math.toRadians(direction);
-		cx += Math.cos(radsAngle) * speed * delta;
-		cy += Math.sin(radsAngle) * speed * delta;
-		
+		cx += dirX * speed * delta;
+		cy += dirY * speed * delta;
 		//countFPS(delta);
 	}
 
@@ -86,9 +85,9 @@ public class Ball {
 			reflect(true);	
 		}
 
-		// Se bateu na parede lateral, reinicie a posição da bola
+		// Se bateu na parede lateral, reflete a bola
 		if (isTallWall(wallId)){
-			reset();
+			reflect(false);
 		}
 	}
 
@@ -114,8 +113,19 @@ public class Ball {
 	public boolean checkCollision(Player player){
 		var playerRect = Box.ofPlayer(player);
 		var ballRect = Box.ofBall(this);
-		boolean collides = playerRect.intersects(ballRect);
-		return collides;
+		// Se há interseção entre o quadrado da bola e do player
+		if(playerRect.intersects(ballRect)) {
+			// O jogador 1 está a esquerda, haverá colisão com o player 1 apenas se a bola estiver
+			//  vindo da direita.
+			if (player.getIndex() == 1) {
+				return dirX < 0;
+			// O jogador 2 está a direita, deixe a bola passar se ela estiver vindo por trás do
+			// jogador.
+			} else {
+				return dirX > 0;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -174,9 +184,9 @@ public class Ball {
 	/** Reflete a bola em relação a uma parede horizontal ou vertical */
 	private void reflect(boolean horizontal) {
 		if (horizontal) {
-			direction = 360 - direction;
+			dirY *= -1;
 		} else {
-			direction = 180 - direction;
+			dirX *= -1;
 		}
 	}
 
@@ -186,8 +196,10 @@ public class Ball {
 		cy = start.y;
 
 		boolean randomBool = Math.random() > 0.5;
-		double angle = Math.random() * 90 - 45;
+		double angle = (Math.random() - 0.5) * 45;
 		direction = (randomBool) ? angle : 180 - angle;
+		dirX = Math.cos(direction);
+		dirY = Math.sin(direction);
 		//direction = 300;
 	}
 }

@@ -1,10 +1,15 @@
 import java.awt.geom.Rectangle2D;
 
 public class Box {
-	private Rectangle2D.Double rect;
+	public final double x, y, width, height;
+	private final Rectangle2D.Double rect;
 	
 	public Box(double cx, double cy, double w, double h) {
-		rect = new Rectangle2D.Double(cx - w / 2, cy - h / 2, w, h);
+		x = cx - w / 2;
+		y = cy - h / 2;
+		width = w;
+		height = h;
+		rect = new Rectangle2D.Double(x, y, width, height);
 	}
 
 	public static Box ofWall(Wall wall) {
