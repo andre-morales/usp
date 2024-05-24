@@ -1,5 +1,5 @@
 # Exercício Programa 1 - COO
-EP1 da matéria de Computação Orientada a Objetos, ministrada pelo professor Daniel Cordeiro.
+EP1 da matéria de Computação Orientada a Objetos, ministrada pelo professor Daniel Cordeiro no terceiro semestre.
 
 O EP se trata de completar a implementação de um jogo de Pong em Java.
 
