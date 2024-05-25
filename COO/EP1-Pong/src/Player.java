@@ -1,12 +1,15 @@
 import java.awt.Color;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
 	Esta classe representa os jogadores (players) do jogo. A classe princial do jogo (Pong)
 	instancia dois objetos deste tipo quando a execução é iniciada.
 */
-
 public class Player {
-	private static int playerIndexCounter;
+	private static int playerIndexCounter = 0;
+	private static Map<String, Player> players = new HashMap<>();
+
 	private double cx, cy;
 	private double width, height;
 	private Color color;
@@ -32,11 +35,12 @@ public class Player {
 		this.width = width;
 		this.height = height;
 		this.color = color;
-		++playerIndexCounter;
-		this.index = playerIndexCounter;
+		this.index = ++playerIndexCounter;
 		this.id = id;
 		this.speed = speed;
 		this.bounds = v_limit;
+
+		players.put(id, this);
 	}
 
 	/**
@@ -79,8 +83,20 @@ public class Player {
 		return id; 
 	}
 
+	/**
+	 * Obtém o índice desse jogador.
+	 * @return Um inteiro 1 para o jogador da esquerda, 2 para o da direita.
+	 */
 	public int getIndex() {
 		return index;
+	}
+
+	/**
+	 * Obtém a cor do jogador.
+	 * @return A cor.
+	 */
+	public Color getColor() {
+		return color;
 	}
 
 	/**
@@ -121,5 +137,14 @@ public class Player {
 		double maxY = bounds[1] - height / 2;
 		if (cy < minY) cy = minY;
 		if (cy > maxY) cy = maxY;
+	}
+
+	/**
+	 * Obtém o player associado ao nome.
+	 * @param playerId O nome do player que foi passado para o construtor de Player.
+	 * @return Uma instância de player associada a este nome, ou null se não houver player com este nome.
+	 */
+	public static Player getById(String playerId) {
+		return players.get(playerId);
 	}
 }

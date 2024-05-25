@@ -6,20 +6,21 @@ import java.awt.geom.Point2D;
 	Esta classe representa a bola usada no jogo. A classe princial do jogo (Pong)
 	instancia um objeto deste tipo quando a execução é iniciada.
 */
-
 public class Ball {
 
 	private Point2D.Double start;
 	private double cx, cy;
 	private double width, height;
 	private double speed;
-	private double direction;
 	private double dirX, dirY;
+	private double timeDelta;
 	private Color color;
-	private int frameCounter;
+
+	@SuppressWarnings("unused")
 	private int fps;
+	private int frameCounter;
 	private long lastFPS;
-	
+
 	/**
 		Construtor da classe Ball. Observe que quem invoca o construtor desta classe define a velocidade da bola 
 		(em pixels por millisegundo), mas não define a direção deste movimento. A direção do movimento é determinada 
@@ -35,14 +36,15 @@ public class Ball {
 	public Ball(double cx, double cy, double width, double height, Color color, double speed){
 		this.cx = cx;
 		this.cy = cy;
-		start = new Point.Double(cx, cy);
 		this.width = width;
 		this.height = height;
 		this.color = color;
-		this.speed = speed * 0.5;
+		this.speed = speed;
 
-		// Gera um ângulo aleatório
+		// Reinicia a bola no campo
+		start = new Point.Double(cx, cy);
 		reset();
+
 		lastFPS = System.currentTimeMillis();
 	}
 
@@ -60,9 +62,14 @@ public class Ball {
 		@param delta quantidade de millisegundos que se passou entre o ciclo anterior de atualização do jogo e o atual.
 	*/
 	public void update(long delta){
-		cx += dirX * speed * delta;
-		cy += dirY * speed * delta;
-		//countFPS(delta);
+		timeDelta = delta;
+		countFPS();
+
+		if (GameLib.isKeyPressed(GameLib.KEY_CONTROL)) {
+			reset();
+		}
+		
+		move(false);
 	}
 
 	/**
@@ -71,6 +78,10 @@ public class Ball {
 		@param playerId uma string cujo conteúdo identifica um dos jogadores.
 	*/
 	public void onPlayerCollision(String playerId){
+		// Desfaz a colisão movendo a bola para a posição anterior a colisão
+		move(true);
+
+		// Reflete a bola na vertical
 		reflect(false);
 	}
 
@@ -80,12 +91,15 @@ public class Ball {
 		@param wallId uma string cujo conteúdo identifica uma das paredes da quadra.
 	*/
 	public void onWallCollision(String wallId){
-		// Se bateu numa parede do topo ou de baixo, reflita a direção da bola
+		// Desfaz a colisão movendo a bola para a posição anterior a colisão
+		move(true);
+
+		// Se bateu numa parede do topo ou de baixo, reflete a bola horizontalmente
 		if (isWideWall(wallId)) {
 			reflect(true);	
 		}
 
-		// Se bateu na parede lateral, reflete a bola
+		// Se bateu na parede lateral, reflete a bola verticalmente
 		if (isTallWall(wallId)){
 			reflect(false);
 		}
@@ -128,6 +142,45 @@ public class Ball {
 		return false;
 	}
 
+	/** Reflete a bola em relação a uma parede horizontal ou vertical */
+	private void reflect(boolean horizontal) {
+		if (horizontal) {
+			dirY *= -1;
+		} else {
+			dirX *= -1;
+		}
+	}
+
+	/** Reinicia a bola no meio do campo com uma direção aleatória */
+	private void reset() {
+		cx = start.x;
+		cy = start.y;
+
+		// Gera um ângulo aleatório de 30 a 45 graus
+		double angle = 30 + Math.random() * 15;
+		
+		// Decide aleatóriamente se a bola será lançada para cima ou para baixo
+		boolean upOrDown = randomBool();
+		angle = (upOrDown) ? angle : -angle;
+
+		// Decide aleatoriamente se a bola vai para esquerda ou para a direita
+		boolean leftOrRight = randomBool();
+		angle = (leftOrRight) ? angle : angle + 180;
+
+		// Calcula dirX e dirY no círculo unitário
+		dirX = Math.cos(Math.toRadians(angle));
+		dirY = Math.sin(Math.toRadians(angle));
+	}
+
+	/**
+	 * Movimenta a bola na direção atual.
+	 * @param reverse Se o movimento deve ser reverso a direção.
+	 */
+	private void move(boolean reverse) {
+		cx += dirX * speed * timeDelta * ((reverse) ? -1 : 1);
+		cy += dirY * speed * timeDelta * ((reverse) ? -1 : 1);
+	}
+
 	/**
 		Método que devolve a coordenada x do centro do retângulo que representa a bola.
 		@return o valor double da coordenada x.
@@ -144,10 +197,18 @@ public class Ball {
 		return cy;
 	}
 
+	/**
+	 * Obtém a largura da bola.
+	 * @return o valor da largura.
+	 */
 	public double getWidth() {
 		return width;
 	}
 
+	/**
+	 * Obtém a altura da bola.
+	 * @return o valor da altura.
+	 */
 	public double getHeight() {
 		return height;
 	}
@@ -155,51 +216,35 @@ public class Ball {
 	/**
 		Método que devolve a velocidade da bola.
 		@return o valor double da velocidade.
-
 	*/
 	public double getSpeed(){
 		return speed;
 	}
 
-	@SuppressWarnings("unused")
-	private void countFPS(double delta) {
+	/** Executa a contagem de FPS */
+	private void countFPS() {
 		frameCounter++;
 		long now = System.currentTimeMillis(); 
 		if (now - lastFPS > 1000) {
 			fps = frameCounter;
 			frameCounter = 0;
 			lastFPS = now;
-			System.out.println("FPS: " + fps + " IDELT: " + (1.0 / (delta / 1000.0)));
+			//System.out.println("FPS: " + fps + " IDELT: " + (1.0 / (timeDelta / 1000.0)));
 		}
 	}
 
+	/** Gera true/false pseudo-aleatóriamente */
+	private static boolean randomBool() {
+		return Math.random() > 0.5;
+	}
+
+	/** Verifica se o id da parede corresponde a uma parede vertical */
 	private static boolean isTallWall(String id) {
 		return id.equals("Left") || id.equals("Right");
 	}
-
+	
+	/** Verifica se o id da parede corresponde a uma parede horizontal */
 	private static boolean isWideWall(String id) {
 		return id.equals("Top") || id.equals("Bottom");
-	}
-
-	/** Reflete a bola em relação a uma parede horizontal ou vertical */
-	private void reflect(boolean horizontal) {
-		if (horizontal) {
-			dirY *= -1;
-		} else {
-			dirX *= -1;
-		}
-	}
-
-	/** Reinicia a bola no meio do campo com uma direção aleatória */
-	private void reset() {
-		cx = start.x;
-		cy = start.y;
-
-		boolean randomBool = Math.random() > 0.5;
-		double angle = (Math.random() - 0.5) * 45;
-		direction = (randomBool) ? angle : 180 - angle;
-		dirX = Math.cos(direction);
-		dirY = Math.sin(direction);
-		//direction = 300;
 	}
 }
