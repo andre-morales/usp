@@ -9,8 +9,8 @@ O EP se trata de completar a implementação de um jogo de Pong em Java.
 |Diretório|Função|
 |-|-|
 |lib|Contém os **.class** distribuídos já com o EP, e o javadoc distribuído. Também contém o **GameLib.jar**, que contém todas os arquivos .class além do javadoc embutido. O **Makefile** depende exclusivamente de GameLib.jar. Os arquivos .class não são utilizados diretamente pelo Makefile.|
-|src|Armazena o código fonte (**.java**) das 3 classes que precisam ser implementadas: Player, Ball e Score.|
-|output|Saída dos 3 arquivos **.class** compilados da fonte.|
+|src|Armazena o código fonte (**.java**) das classes implementadas pelo aluno.|
+|output|Saída dos arquivos **.class** compilados da fonte em src/.|
 
 ## :package: Compilação
 :cowboy_hat_face: **tl;dr** ```> make build```
@@ -26,7 +26,7 @@ Para compilar as 3 classes Java em ```src/```, invoque o comando ```> make build
 ## :arrow_forward: Executando
 🤠 **tl;dr:** ```> make run``` 
 
-Para executar o EP, deve-se executar as 3 classes compiladas em conjunto com as classes distribuídas. O ponto de entrada main() do projeto se encontra na classe distribuída **Pong.class**.
+Para executar o EP, deve-se executar as classes compiladas da fonte em conjunto com as classes distribuídas. O ponto de entrada main() do projeto se encontra na classe distribuída **Pong.class**.
 
 O Makefile distribuído já possui uma _target_ que compila e logo executa o projeto, usando o comando: ```> make run```
 

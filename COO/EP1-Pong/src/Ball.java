@@ -16,6 +16,9 @@ public class Ball {
 	private double timeDelta;
 	private Color color;
 
+	private double explCx, explCy;
+	private long explTime = -1;
+
 	@SuppressWarnings("unused")
 	private int fps;
 	private int frameCounter;
@@ -54,6 +57,20 @@ public class Ball {
 	public void draw(){
 		GameLib.setColor(color);
 		GameLib.fillRect(cx, cy, width, height);
+		drawExplosion();
+	}
+
+	/**
+	 * Desenha uma pequena explosão no caso de um ponto feito.
+	 */
+	private void drawExplosion() {
+		final double EXPLOSION_TIME = 200;
+		if (explTime == -1) return;
+
+		long now = System.currentTimeMillis();
+		if (now - explTime >= EXPLOSION_TIME) return;
+
+		GameLib.drawExplosion(explCx, explCy, (now - explTime) / EXPLOSION_TIME);
 	}
 
 	/**
@@ -101,6 +118,10 @@ public class Ball {
 
 		// Se bateu na parede lateral, reflete a bola verticalmente
 		if (isTallWall(wallId)){
+			explCx = cx;
+			explCy = cy;
+			explTime = System.currentTimeMillis();
+
 			reflect(false);
 		}
 	}
