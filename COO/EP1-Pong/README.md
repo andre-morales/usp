@@ -8,7 +8,7 @@ O EP se trata de completar a implementação de um jogo de Pong em Java.
 ## :file_folder: Estrutura
 |Diretório|Função|
 |-|-|
-|lib|Contém os **.class** distribuídos já com o EP, e o javadoc distribuído. Também contém o **GameLib.jar**, que contém todas os arquivos .class além do javadoc embutido. O **Makefile** depende exclusivamente de GameLib.jar. Os arquivos .class não são utilizados diretamente pelo Makefile.|
+|lib|Contém os **.class** distribuídos já com o EP, e o javadoc distribuído. Também contém o **GameLib.jar**, que contém todas os arquivos .class além do javadoc embutido. As targets _build_ e _run_ do **Makefile** dependem exclusivamente de GameLib.jar. Os arquivos .class distribuídos são utilizados somente na construção do GameLib.jar.|
 |src|Armazena o código fonte (**.java**) das classes implementadas pelo aluno.|
 |output|Saída dos arquivos **.class** compilados da fonte em src/.|
 
@@ -21,7 +21,7 @@ O **.zip** distribuído inclui **Player.class**, **Score.class** e **Ball.class*
 
 Para auxiliar no desenvolvimento e na depuração do projeto, os diretórios ```lib/classes``` e ```lib/javadoc``` são compilados em um único arquivo Java Archive (.jar), encontrado em ```lib/GameLib.jar```. Os arquivos .jar geralmente são suportados de melhor forma nas IDEs modernas. A compilação desse .jar pode ser invocada usando o makefile com o comando ```> make gamelib```. Esse passo não é necessário para executar o projeto pois o GameLib.jar já vem distribuído aqui nesse repositório, mas é importante documentar sua origem.
 
-Para compilar as 3 classes Java em ```src/```, invoque o comando ```> make build```, que gerará os arquivos **.class** no diretório ```output/```
+Para compilar as fontes das classes Java presentes em ```src/```, invoque o comando ```> make build```, que gerará os arquivos **.class** no diretório ```output/```
 
 ## :arrow_forward: Executando
 🤠 **tl;dr:** ```> make run``` 
