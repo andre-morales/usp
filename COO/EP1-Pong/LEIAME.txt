@@ -1,0 +1,27 @@
+Nome: André Morales de Oliveira Carneiro
+N° USP: 14558332
+
+O README.md tem instruções mais detalhadas...
+O Makefile (vide instruções dentro dele) é capaz de compilar, executar e debugar o projeto.
+As classes prontas do professor, assim como o javadoc, foram separadas e empacotadas em um .jar GameLib.jar.
+A princípio a execução utiliza esse GameLib.jar e funciona maravilhosamente, porém, como segundo
+plano, pode-se utilizar as classes prontas diretamente mesmo, contanto que seja indicado ao java 
+aonde estão.
+
+1) Compilação:
+Do diretório raíz, executar:
+
+> make build
+
+OU
+
+> javac src/*.java -d output -cp lib/GameLib.jar;src;
+
+2) Executando:
+Também do diretório raíz, executar:
+
+> make run
+
+OU
+
+> java -cp "output;lib/GameLib.jar;" Pong
