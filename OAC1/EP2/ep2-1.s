@@ -4,15 +4,10 @@
 	.def	__main;	.scl	2;	.type	32;	.endef
 	.globl	main
 	.def	main;	.scl	2;	.type	32;	.endef
-	.seh_proc	main
 main:
 	push	rbp
-	.seh_pushreg	rbp
 	mov	rbp, rsp
-	.seh_setframe	rbp, 0
 	sub	rsp, 112
-	.seh_stackalloc	112
-	.seh_endprologue
 	call	__main
 	mov	edx, DWORD PTR -4[rbp]
 	mov	eax, DWORD PTR -8[rbp]
@@ -51,8 +46,6 @@ main:
 	add	eax, edx
 	mov	DWORD PTR -76[rbp], eax
 	nop
-	add	rsp, 112
-	pop	rbp
+	leave
 	ret
-	.seh_endproc
-	.ident	"GCC: (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 13.2.0"
+	.ident	"GCC: (x86_64-posix-seh-rev0, Built by MinGW-Builds project) 13.2.0"
