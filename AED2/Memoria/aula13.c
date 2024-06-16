@@ -55,6 +55,9 @@ void ex1_limpeza(const char* caminho1, const char* caminho2) {
 		if (ler_registro(entrada, &reg) != LEITURA_OK)
 			break;
 
+		printf("------ REGISTRO ------\n");
+		imprimir_registro(&reg);
+
 		// Só escreve o registro no arquivo de saída se ele for válido
 		// Limpando o arquivo de entrada.
 		if (reg.valido) {
@@ -65,8 +68,8 @@ void ex1_limpeza(const char* caminho1, const char* caminho2) {
 }
 
 void main() {
-	const char* const ARQUIVO1 = "teste0.txt";
-	const char* const ARQUIVO2 = "teste2.txt";
+	const char* const ARQUIVO1 = "entrada.txt";
+	const char* const ARQUIVO2 = "teste_saida.txt";
 
 	//ex0_leitura_escrita(ARQUIVO1);
 	ex1_limpeza(ARQUIVO1, ARQUIVO2);
