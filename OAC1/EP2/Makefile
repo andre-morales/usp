@@ -7,3 +7,6 @@ t1: ep2-1.c
 
 t2: ep2-2.c
 	gcc -S ep2-2.c -masm=intel -fno-asynchronous-unwind-tables -O0 -g0
+
+t3: ep2-3.c
+	gcc -S ep2-3.c -masm=intel -fno-asynchronous-unwind-tables -O0 -g0

@@ -15,7 +15,7 @@ Diretiva|Funcionalidade
 -g0|Desativa o suporte para depuração, também tornando o código mais direto e mais fácil compreensão.
 
 ## :exclamation: Importante
-Enalteço aqui que: Ao primeiro arquivo darei um tratamento especial, e escreverei a explicação em vários detalhes para todas linhas e diretivas que surgirem. Dito isso, os outros dois arquivos que analisaremos possuem muitas das mesmas diretivas e formatações, e portanto, para não termos muita redundância, serei mais breve neles.
+Enalteço aqui que: Ao primeiro arquivo darei um tratamento especial, e escreverei a explicação em vários detalhes para todas linhas e diretivas que surgirem. Dito isso, os outros dois arquivos que analisaremos possuem muitas das mesmas diretivas e formatações, e portanto, para não termos muita redundância, serei progressivamente mais breve neles.
 
 ## :scroll: Arquivo EP2-1.s
 O assembly gerado final depois da compilação é este:
@@ -211,3 +211,86 @@ Chamada do printf("xeque"), com a string armazenada em .LC2, como explicado ante
 42] ret
 ```
 Epílogo da função. Desaloca o espaço das variáveis locais, restaura o ponteiro de pilha original RBP e sai da função main().
+
+## :scroll: Arquivo EP2-3.s
+O assembly gerado final depois da compilação é este:
+
+![](./print3.png)
+
+```1] .file "ep2-3.c" ``` - Indica a origem desse assembly.
+```2] .intel-syntax noprefix``` - Ajusta a sintaxe do assembly gerado.
+```
+3] .text
+4] .def __main
+```
+Mira na seção texto do objeto e define __main como um símbolo participante dessa seção para o depurador.
+```
+5] .section .rdata,"dr"
+6] .LC0:
+7] 		.ascii "algo\0"
+8] .LC1:
+9] 		.ascii "outro\0"
+```
+Troca o alvo do assembler para a seção de dados apenas leitura do objeto (.rdata) e gera dois símbolos para duas strings terminadas em nulo: .LC0 para a string "algo" e .LC1 para a string "outro". Essas labels são usadas depois no programa para imprimir essas strings.
+
+```
+10] .text
+11] .globl main
+12] .def main; ...
+13] main:
+```
+Muda novamente o alvo do assembler para a seção texto. Declara que o label main: será um label global visível no objeto final, depois declara propriedades sobre main para a seção especial de depuração do objeto.
+Ao final, começa a declaração dos conteúdos de main().
+
+```
+14] push rbp
+15] mov rbp, rsp
+16] sub rsp, 48
+```
+Prólogo da função main(), dessa vez alocando 48 bytes de espaço para as variáveis locais.
+
+```17] call __main``` - Inicialização da biblioteca C.
+
+```18] jmp .L2``` - Pula a execução para a label .L2. Essa label vai ser responsável por calcular a condição do while() e tem o resto do código depois do while().
+
+```19] .L3:``` - Definição do label local .L3. Esse label ficou responsável pelo corpo do while(). Incluindo o acréscimo e o print().
+
+```20] add DWORD PTR -4[rbp], 1``` - Soma 1 na primeira variável da pilha (int a).
+
+```
+21] lea rax, .LC0[rip] 
+22] mov rcx, rax
+23] call printf
+```
+Preparação e execução do printf("algo"). Como dito antes, .LC0 guarda a string "algo", e printf() espera o primeiro argumento do formato em RCX.
+
+```24] .L2:``` - Definição de .L2: Ficou responsável pelo cálculo da condição do while, o pulo para o corpo se a condição for verdadeira, e o resto do programa.
+
+```
+25] mov edx, DWORD PTR -8[rbp]
+26] mov eax, DWORD PTR -12[rbp]
+27] add eax, edx
+```
+Lê a segunda e terceira variável inteira da pilha. Os equivalentes de (int b) e (int c). Logo em seguida, as soma com o resultado da soma final em EAX.
+
+```
+28] cmp DWORD PTR -4[rbp], eax
+29] jg .L3
+```
+Compara a primeira variável da pilha (int a) com a soma que calcuamos em EAX (b + c). Em seguida, a partir do resultado dessa comparação, se o primeiro operando (a) for maior que o segundo (b + c), pula de volta para .L3, que contém o corpo do while.
+
+```30] add DWORD PTR -12[rbp], 1``` - Soma 1 na terceira variável (int c). A partir dessa instrução, os comandos estão de fora do while.
+
+```
+31] lea rax, .LC1[rip] 
+32] mov rcx, rax
+33] call puts
+```
+Chamada do puts("outro"). Carrega em RAX o ponteiro para a string "outro" armazenada em .LC1, coloca o ponteiro em RCX, e chama puts() para imprimir a string.
+
+```
+34] nop
+35] leave
+36] ret
+```
+Epílogo da função, como visto mais vezes, desaloca as variáveis locais, restaura o ponteiro de base original (RBP) e retorna da função main().
