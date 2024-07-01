@@ -1,0 +1,28 @@
+/*Makes sure images appear always fully on new pages*/
+@media print {
+  .pagebreak { page-break-before: always; margin: 0; padding: 0; } 
+}
+
+/*Removes excessive padding from headers*/
+h2 {
+  margin-top: 0.6rem;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/*Fixes emojis not appearing*/
+h2::first-letter {
+  font-weight: normal;
+}
+
+/*Fixates image size*/
+.imagex {
+ height: 65rem;
+ text-align: center;
+}
+
+p:has(> .imagex) {
+  text-align: center;
+  height: 65rem;
+  overflow: hidden;
+}

@@ -6,8 +6,8 @@ Para analisar os arquivos .s, compilamos o arquivo fonte .c com algumas diretiva
 
 Cada uma dessas diretivas controla a geração do assembly, a notar:
 
-Diretiva|Funcionalidade
---:|:--
+|Diretiva|Funcionalidade|
+|--:|:--|
 -S|Pede ao compilador que apenas gere o assembly para o arquivo dado, e não prossiga com os passos do Assembler e do Linker.
 -masm=intel|Gera o assembly em sintaxe Intel ao invés da sintaxe padrão GAS. A sintaxe Intel costuma ser visualmente mais limpa.
 -fno-asynchronous-unwind-tables|Remove do Assembly final diretivas responsáveis por lidar com o unwind da pilha no caso de exceções. Como não estamos usando exceções no código, remove um pouco do barulho do código.
@@ -18,8 +18,6 @@ Diretiva|Funcionalidade
 Enalteço aqui que: Ao primeiro arquivo darei um tratamento especial, e escreverei a explicação em vários detalhes para todas linhas e diretivas que surgirem. Dito isso, os outros dois arquivos que analisaremos possuem muitas das mesmas diretivas e formatações, e portanto, para não termos muita redundância, serei progressivamente mais breve neles.
 
 ## :scroll: Arquivo EP2-1.s
-O assembly gerado final depois da compilação é este:
-
 ![](./print1.png)
 
 As linhas 1-6 são diretivas para o Assembler que especifica algumas informações importantes.
@@ -82,8 +80,6 @@ A segunda instrução retorna a execução dessa função de volta para aquela q
 ```51] .ident "..."``` - Marcador de comentário criado pelo compilador. Os comentários vão parar em uma seção especial de comentários do objeto final.
 
 ## :scroll: Arquivo EP2-2.s
-O assembly gerado final depois da compilação é este:
-
 ![](./print2.png)
 
 
@@ -213,8 +209,6 @@ Chamada do printf("xeque"), com a string armazenada em .LC2, como explicado ante
 Epílogo da função. Desaloca o espaço das variáveis locais, restaura o ponteiro de pilha original RBP e sai da função main().
 
 ## :scroll: Arquivo EP2-3.s
-O assembly gerado final depois da compilação é este:
-
 ![](./print3.png)
 
 ```1] .file "ep2-3.c" ``` - Indica a origem desse assembly.
