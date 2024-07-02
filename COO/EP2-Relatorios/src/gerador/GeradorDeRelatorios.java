@@ -31,9 +31,7 @@ public class GeradorDeRelatorios {
 	public static final int FORMATO_NEGRITO = 0b0001;
 	public static final int FORMATO_ITALICO = 0b0010;
 
-	private Produto[] produtos;
-	private String algoritmo;
-	private String criterio;
+	private List<Produto> produtos;
 	private String filtro;
 	private String argFiltro;
 	private int format_flags;	
@@ -41,109 +39,30 @@ public class GeradorDeRelatorios {
 	private ISortingStrategy sortingStrategy;
 	private ICriterion sortingCriterion;
 
-	public GeradorDeRelatorios(Produto[] produtos, String algoritmo, String criterio, String filtro, String argFiltro, int format_flags){
+	public GeradorDeRelatorios(Collection<Produto> produtos, ISortingStrategy algoritmo, ICriterion criterio, String filtro, String argFiltro, int format_flags){
+		this.produtos = new ArrayList<>();
+		this.produtos.addAll(produtos);
 
-		this.produtos = new Produto[produtos.length];
-		
-		for(int i = 0; i < produtos.length; i++){
-		
-			this.produtos[i] = produtos[i];
-		}
-
-		this.algoritmo = algoritmo;
-		this.criterio = criterio;
 		this.format_flags = format_flags;
 		this.filtro = filtro;
 		this.argFiltro = argFiltro;
 		
-		switch(criterio) {
-			case "preco_c" -> this.sortingCriterion = new AscPriceCriterion();
-			case "descricao_c" -> this.sortingCriterion = new AscDescriptionCriterion();
-			case "estoque_c" -> this.sortingCriterion = new AscStockCriterion();
-			default -> {
-				throw new RuntimeException("Criterio invalido!");
-			}
-		}
-		
-		switch(algoritmo) {
-			case "insertion" -> this.sortingStrategy = new InsertionSortStrategy(this.sortingCriterion);
-			case "quick" -> this.sortingStrategy = new QuickSortStrategy(this.sortingCriterion);
-			default -> {
-				throw new RuntimeException("Algoritmo invalido!");
-			}
-		}
+		this.sortingCriterion = criterio;
+		this.sortingStrategy = algoritmo;
 	}
 
-	private void ordena(int ini, int fim){
+	private void ordena(){
 		sortingStrategy.sort(produtos);
-		
-		/*if(algoritmo.equals(ALG_INSERTIONSORT)){
-			for(int i = ini; i <= fim; i++){
-
-				Produto x = produtos[i];				
-				int j = (i - 1);
-
-				while(j >= ini){
-
-					if(criterio.equals(CRIT_DESC_CRESC)){
-
-						if( x.getDescricao().compareToIgnoreCase(produtos[j].getDescricao()) < 0 ){
-			
-							produtos[j + 1] = produtos[j];
-							j--;
-						}
-						else break;
-					}
-					else if(criterio.equals(CRIT_PRECO_CRESC)){
-
-						if(x.getPreco() < produtos[j].getPreco()){
-			
-							produtos[j + 1] = produtos[j];
-							j--;
-						}
-						else break;
-					}
-					else if(criterio.equals(CRIT_ESTOQUE_CRESC)){
-
-						if(x.getQtdEstoque() < produtos[j].getQtdEstoque()){
-			
-							produtos[j + 1] = produtos[j];
-							j--;
-						}
-						else break;
-					}
-					else throw new RuntimeException("Criterio invalido!");
-				}
-
-				produtos[j + 1] = x;
-			}
-		}
-		else if(algoritmo.equals(ALG_QUICKSORT)){
-
-			if(ini < fim) {
-
-				int q = particiona(ini, fim);
-				
-				ordena(ini, q);
-				ordena(q + 1, fim);
-			}
-		}
-		else {
-			throw new RuntimeException("Algoritmo invalido!");
-		}*/
 	}
 	
 	public void debug(){
-
-		System.out.println("Gerando relatório para array contendo " + produtos.length + " produto(s)");
+		System.out.println("Gerando relatório para array contendo " + produtos.size() + " produto(s)");
 		System.out.println("parametro filtro = '" + argFiltro + "'"); 
 	}
 
 	public void geraRelatorio(String arquivoSaida) throws IOException {
-
 		debug();
-
-		ordena(0, produtos.length - 1);
+		ordena();
 
 		PrintWriter out = new PrintWriter(arquivoSaida);
 
@@ -155,9 +74,9 @@ public class GeradorDeRelatorios {
 
 		int count = 0;
 
-		for(int i = 0; i < produtos.length; i++){
+		for(int i = 0; i < produtos.size(); i++){
 
-			Produto p = produtos[i];
+			Produto p = produtos.get(i);
 			boolean selecionado = false;
 
 			if(filtro.equals(FILTRO_TODOS)){
@@ -208,7 +127,7 @@ public class GeradorDeRelatorios {
 		}
 
 		out.println("</ul>");
-		out.println(count + " produtos listados, de um total de " + produtos.length + ".");
+		out.println(count + " produtos listados, de um total de " + produtos.size() + ".");
 		out.println("</body>");
 		out.println("</html>");
 
@@ -253,7 +172,6 @@ public class GeradorDeRelatorios {
 	} 
 
 	public static void main(String [] args) {
-
 		if(args.length < 4){
 
 			System.out.println("Uso:");
@@ -283,9 +201,13 @@ public class GeradorDeRelatorios {
 			formato |= (op != null ? op.equals("negrito") ? FORMATO_NEGRITO : (op.equals("italico") ? FORMATO_ITALICO : 0) : 0); 
 		}
 		
-		GeradorDeRelatorios gdr = new GeradorDeRelatorios(carregaProdutos(), 
-			opcao_algoritmo,
-			opcao_criterio_ord,
+		// Cria os objetos estratégia utilizados pelo gerador de relatórios
+		ICriterion sortingCrit = getCriterionOf(opcao_criterio_ord);
+		ISortingStrategy sortingStrat = getSortingStrategyOf(opcao_algoritmo, sortingCrit);
+		
+		GeradorDeRelatorios gdr = new GeradorDeRelatorios(List.of(carregaProdutos()), 
+			sortingStrat,
+			sortingCrit,
 			opcao_criterio_filtro,
 			opcao_parametro_filtro,
 			formato 
@@ -296,6 +218,28 @@ public class GeradorDeRelatorios {
 		}
 		catch(IOException e){
 			e.printStackTrace();
+		}
+	}
+	
+	private static ICriterion getCriterionOf(String name) {
+		switch(name) {
+			case CRIT_PRECO_CRESC:
+				return new AscPriceCriterion();
+			case CRIT_DESC_CRESC:
+				return new AscDescriptionCriterion();
+			case CRIT_ESTOQUE_CRESC:
+				return new AscStockCriterion();
+			default:
+				throw new RuntimeException("Criterio invalido!");
+		}
+	}
+	
+	private static ISortingStrategy getSortingStrategyOf(String name, ICriterion criterion) {
+		switch(name) {
+			case ALG_INSERTIONSORT: return new InsertionSortStrategy(criterion);
+			case ALG_QUICKSORT: return new QuickSortStrategy(criterion);
+			default:
+				throw new RuntimeException("Algoritmo invalido!");
 		}
 	}
 }

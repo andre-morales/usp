@@ -2,6 +2,7 @@ package sorts;
 
 import criteria.ICriterion;
 import gerador.Produto;
+import java.util.List;
 
 /**
  * @author Andre
@@ -15,21 +16,21 @@ public class InsertionSortStrategy implements ISortingStrategy {
 	}
 	
 	@Override
-	public void sort(Produto[] produtos) {
+	public void sort(List<Produto> produtos) {
 		var ini = 0;
-		var fim = produtos.length - 1;
+		var fim = produtos.size() - 1;
 		for(int i = 0; i <= fim; i++){
-			Produto x = produtos[i];				
+			Produto x = produtos.get(i);				
 			int j = (i - 1);
 
 			while(j >= ini){
-				if (criterion.compare(x, produtos[j]) < 0) {
-					produtos[j + 1] = produtos[j];
+				if (criterion.compare(x, produtos.get(j)) < 0) {
+					produtos.set(j + 1, produtos.get(j));
 					j--;
 				} else break;
 			}
 
-			produtos[j + 1] = x;
+			produtos.set(j + 1, x);
 		}
 	}
 

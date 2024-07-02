@@ -2,6 +2,7 @@ package sorts;
 
 import criteria.ICriterion;
 import gerador.Produto;
+import java.util.List;
 
 /**
  * @author Andre
@@ -15,11 +16,11 @@ public class QuickSortStrategy implements ISortingStrategy {
 	}
 	
 	@Override
-	public void sort(Produto[] produtos) {
-		doSort(produtos, 0, produtos.length - 1);
+	public void sort(List<Produto> produtos) {
+		doSort(produtos, 0, produtos.size() - 1);
 	}
 
-	private void doSort(Produto[] produtos, int ini, int fim) {
+	private void doSort(List<Produto> produtos, int ini, int fim) {
 		if(ini < fim) {
 			int q = particiona(produtos, ini, fim);
 
@@ -28,24 +29,24 @@ public class QuickSortStrategy implements ISortingStrategy {
 		}
 	}
 	
-	private int particiona(Produto[] produtos, int ini, int fim){
-		Produto x = produtos[ini];
+	private int particiona(List<Produto> produtos, int ini, int fim){
+		Produto x = produtos.get(ini);
 		int i = (ini - 1);
 		int j = (fim + 1);
 
 		while(true){
 			do{ 
 				j--;
-			} while(criterion.compare(produtos[j], x) > 0);
+			} while(criterion.compare(produtos.get(j), x) > 0);
 
 			do{
 				i++;
-			} while(criterion.compare(produtos[i], x) < 0);
+			} while(criterion.compare(produtos.get(i), x) < 0);
 			
 			if(i < j){
-				Produto temp = produtos[i];
-				produtos[i] = produtos[j]; 				
-				produtos[j] = temp;
+				Produto temp = produtos.get(i);
+				produtos.set(i, produtos.get(j)); 				
+				produtos.set(j, temp);
 			}
 			else return j;
 		}
