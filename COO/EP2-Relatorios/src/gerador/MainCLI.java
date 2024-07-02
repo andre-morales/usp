@@ -8,6 +8,10 @@ import filters.AllFilter;
 import filters.CategoryFilter;
 import filters.IFilter;
 import filters.StockFilter;
+import formatters.BoldFormatter;
+import formatters.IFormatter;
+import formatters.ItalicFormatter;
+import formatters.StandardFormatter;
 import java.io.IOException;
 import java.util.List;
 import sorts.ISortingAlgorithm;
@@ -69,12 +73,13 @@ public class MainCLI {
 		ICriterion sortingCrit = getCriterionOf(opcao_criterio_ord);
 		ISortingAlgorithm sortingStrat = getSortingStrategyOf(opcao_algoritmo);
 		IFilter filter = getFilterOf(opcao_criterio_filtro, opcao_parametro_filtro);
+		IFormatter formatter = getFormatterOf(opcoes_formatacao);
 		
 		// Carrega os produtos
 		List<Produto> produtos = List.of(carregaProdutos());
 		
 		// Instancia um novo gerador de relatórios com os produtos e as estratégias pedidas
-		GeradorDeRelatorios gdr = new GeradorDeRelatorios(produtos, sortingStrat, sortingCrit, filter, formato);
+		GeradorDeRelatorios gdr = new GeradorDeRelatorios(produtos, sortingStrat, sortingCrit, filter, formatter);
 
 		try {
 			gdr.geraRelatorio("saida.html");
@@ -119,6 +124,26 @@ public class MainCLI {
 			new ProdutoPadrao(32, "The Art of Computer Programming Vol. 3", "Livros", 4, 270.00)
 		};
 	} 
+	
+	private static IFormatter getFormatterOf(String... args) {
+		IFormatter formatter = new StandardFormatter();
+		for (String fmt : args) {
+			if (fmt == null) continue;
+			if (fmt.isEmpty()) continue;
+			
+			switch(fmt) {
+			case "negrito":
+				formatter = new BoldFormatter(formatter);
+				break;
+			case "italico":
+				formatter = new ItalicFormatter(formatter);
+				break;
+			default:
+				throw new RuntimeException("Formatador inválido: " + fmt);
+			}
+		}
+		return formatter;
+	}
 	
 	private static ICriterion getCriterionOf(String name) {
 		switch(name) {

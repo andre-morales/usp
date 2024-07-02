@@ -2,6 +2,7 @@ package gerador;
 
 import criteria.ICriterion;
 import filters.IFilter;
+import formatters.IFormatter;
 import static gerador.MainCLI.*;
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -16,8 +17,9 @@ public class GeradorDeRelatorios {
 	private ISortingAlgorithm sortingAlgorithm;
 	private ICriterion sortingCriterion;
 	private IFilter filter;
+	private IFormatter formatter;
 
-	public GeradorDeRelatorios(Collection<Produto> produtos, ISortingAlgorithm algoritmo, ICriterion criterio, IFilter filtro, int format_flags){
+	public GeradorDeRelatorios(Collection<Produto> produtos, ISortingAlgorithm algoritmo, ICriterion criterio, IFilter filtro, IFormatter formatter){
 		this.produtos = new ArrayList<>();
 		this.produtos.addAll(produtos);
 
@@ -26,6 +28,7 @@ public class GeradorDeRelatorios {
 		this.filter = filtro;
 		this.sortingCriterion = criterio;
 		this.sortingAlgorithm = algoritmo;
+		this.formatter = formatter;
 	}
 
 	private void ordena(){
@@ -56,27 +59,7 @@ public class GeradorDeRelatorios {
 		List<Produto> filteredProducts = produtos.stream().filter(this.filter).toList();
 		
 		for (Produto p : filteredProducts) {
-			out.print("<li>");
-
-			if((format_flags & FORMATO_ITALICO) > 0){
-				out.print("<span style=\"font-style:italic\">");
-			}
-
-			if((format_flags & FORMATO_NEGRITO) > 0){
-				out.print("<span style=\"font-weight:bold\">");
-			} 
-
-			out.print(p.formataParaImpressao());
-
-			if((format_flags & FORMATO_NEGRITO) > 0){
-				out.print("</span>");
-			} 
-
-			if((format_flags & FORMATO_ITALICO) > 0){
-				out.print("</span>");
-			}
-
-			out.println("</li>");
+			formatter.format(out, p);
 		}		
 
 		out.println("</ul>");
