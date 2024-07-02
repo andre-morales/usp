@@ -1,0 +1,33 @@
+ID, DESCRIÇÃO, CATEGORIA, QUANTIDADE_ESTOQUE, PREÇO, NEGRITO, ITALICO, COR
+1, O Hobbit, Livros, 2, 34.90, true, false, #FF0000
+2, Notebook Core i7, Informatica, 5, 1999.90, true, true, #000000
+3, Resident Evil 4, Games, 7, 79.90, false, true, #00FF00
+4, iPhone, Telefonia, 8, 4999.90, false, false, #000000
+5, Calculo I, Livros, 20, 55.00, true, false, #000000
+6, Power Glove, Games, 3, 499.90, false, true, #00FF00
+7, Microsoft HoloLens, Informatica, 1, 19900.00, true, true, #000000
+8, OpenGL Programming Guide, Livros, 4, 89.90, true, false, #000000
+9, Vectrex, Games, 1, 799.90, false, true, #00FF00
+10, Carregador iPhone, Telefonia, 15, 499.90, false, false, #000000
+11, Introduction to Algorithms, Livros, 7, 315.00, true, false, #000000
+12, Daytona USA (Arcade), Games, 1, 12000.00, false, true, #00FF00
+13, Neuromancer, Livros, 5, 45.00, true, false, #000000
+14, Nokia 3100, Telefonia, 4, 249.99, false, false, #000000
+15, Oculus Rift, Games, 1, 3600.00, false, true, #00FF00
+16, Trackball Logitech, Informatica, 1, 250.00, true, true, #000000
+17, After Burner II (Arcade), Games, 2, 8900.00, false, true, #00FF00
+18, Assembly for Dummies, Livros, 30, 129.90, true, false, #000000
+19, iPhone (usado), Telefonia, 3, 3999.90, false, false, #000000
+20, Game Programming Patterns, Livros, 1, 299.90, true, false, #FF0000
+21, Playstation 2, Games, 10, 499.90, false, true, #00FF00
+22, Carregador Nokia, Telefonia, 14, 89.00, false, false, #000000
+23, Placa Aceleradora Voodoo 2, Informatica, 4, 189.00, true, true, #0000FF
+24, Stunts, Games, 3, 19.90, false, true, #00FF00
+25, Carregador Generico, Telefonia, 9, 30.00, false, false, #000000
+26, Monitor VGA 14 polegadas, Informatica, 2, 199.90, true, true, #0000FF
+27, Nokia N-Gage, Telefonia, 9, 699.00, false, false, #000000
+28, Disquetes Maxell 5.25 polegadas (caixa com 10 unidades), Informatica, 23, 49.00, true, true, #0000FF
+29, Alone in The Dark, Games, 11, 59.00, false, true, #00FF00
+30, The Art of Computer Programming Vol. 1, Livros, 3, 240.00, true, false, #000000
+31, The Art of Computer Programming Vol. 2, Livros, 2, 200.00, true, false, #FF0000
+32, The Art of Computer Programming Vol. 3, Livros, 4, 270.00, true, false, #000000
