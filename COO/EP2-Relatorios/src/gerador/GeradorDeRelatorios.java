@@ -4,13 +4,17 @@ import criteria.AscDescriptionCriterion;
 import criteria.AscPriceCriterion;
 import criteria.AscStockCriterion;
 import criteria.ICriterion;
+import filters.AllFilter;
+import filters.CategoryFilter;
+import filters.IFilter;
+import filters.StockFilter;
 import java.io.PrintWriter;
 import java.io.IOException;
 
 import java.util.*;
-import sorts.ISortingStrategy;
-import sorts.InsertionSortStrategy;
-import sorts.QuickSortStrategy;
+import sorts.InsertionSortAlgorithm;
+import sorts.QuickSortAlgorithm;
+import sorts.ISortingAlgorithm;
 
 public class GeradorDeRelatorios {
 
@@ -32,32 +36,31 @@ public class GeradorDeRelatorios {
 	public static final int FORMATO_ITALICO = 0b0010;
 
 	private List<Produto> produtos;
-	private String filtro;
-	private String argFiltro;
 	private int format_flags;	
 	
-	private ISortingStrategy sortingStrategy;
+	private ISortingAlgorithm sortingAlgorithm;
 	private ICriterion sortingCriterion;
+	private IFilter filter;
 
-	public GeradorDeRelatorios(Collection<Produto> produtos, ISortingStrategy algoritmo, ICriterion criterio, String filtro, String argFiltro, int format_flags){
+	public GeradorDeRelatorios(Collection<Produto> produtos, ISortingAlgorithm algoritmo, ICriterion criterio, IFilter filtro, int format_flags){
 		this.produtos = new ArrayList<>();
 		this.produtos.addAll(produtos);
 
 		this.format_flags = format_flags;
-		this.filtro = filtro;
-		this.argFiltro = argFiltro;
 		
+		this.filter = filtro;
 		this.sortingCriterion = criterio;
-		this.sortingStrategy = algoritmo;
+		this.sortingAlgorithm = algoritmo;
 	}
 
 	private void ordena(){
-		sortingStrategy.sort(produtos);
+		sortingAlgorithm.setCriterion(sortingCriterion);
+		sortingAlgorithm.sort(produtos);
 	}
 	
 	public void debug(){
 		System.out.println("Gerando relatório para array contendo " + produtos.size() + " produto(s)");
-		System.out.println("parametro filtro = '" + argFiltro + "'"); 
+		System.out.println("parametro filtro: '" + filter.getDescription() + "'"); 
 	}
 
 	public void geraRelatorio(String arquivoSaida) throws IOException {
@@ -71,63 +74,38 @@ public class GeradorDeRelatorios {
 		out.println("<body>");
 		out.println("Relatorio de Produtos:");
 		out.println("<ul>");
+		
+		// Cria uma stream de produtos, filtra eles de acordo com o predicado e converte a 
+		// stream em uma lista novamente. A coalescência de uma stream() em uma lista é uma operação
+		// preguiçosa (lazy-evaluation), e não deve consumir mais memória com cópias.
+		List<Produto> filteredProducts = produtos.stream().filter(this.filter).toList();
+		
+		for (Produto p : filteredProducts) {
+			out.print("<li>");
 
-		int count = 0;
-
-		for(int i = 0; i < produtos.size(); i++){
-
-			Produto p = produtos.get(i);
-			boolean selecionado = false;
-
-			if(filtro.equals(FILTRO_TODOS)){
-
-				selecionado = true;
-			}
-			else if(filtro.equals(FILTRO_ESTOQUE_MENOR_OU_IQUAL_A)){
-
-				if(p.getQtdEstoque() <= Integer.parseInt(argFiltro)) selecionado = true;	
-			}
-			else if(filtro.equals(FILTRO_CATEGORIA_IGUAL_A)){
-
-				if(p.getCategoria().equalsIgnoreCase(argFiltro)) selecionado = true;
-			}
-			else{
-				throw new RuntimeException("Filtro invalido!");			
+			if((format_flags & FORMATO_ITALICO) > 0){
+				out.print("<span style=\"font-style:italic\">");
 			}
 
-			if(selecionado){
+			if((format_flags & FORMATO_NEGRITO) > 0){
+				out.print("<span style=\"font-weight:bold\">");
+			} 
 
-				out.print("<li>");
+			out.print(p.formataParaImpressao());
 
-				if((format_flags & FORMATO_ITALICO) > 0){
+			if((format_flags & FORMATO_NEGRITO) > 0){
+				out.print("</span>");
+			} 
 
-					out.print("<span style=\"font-style:italic\">");
-				}
-
-				if((format_flags & FORMATO_NEGRITO) > 0){
-
-					out.print("<span style=\"font-weight:bold\">");
-				} 
-			
-				out.print(p.formataParaImpressao());
-
-				if((format_flags & FORMATO_NEGRITO) > 0){
-
-					out.print("</span>");
-				} 
-
-				if((format_flags & FORMATO_ITALICO) > 0){
-
-					out.print("</span>");
-				}
-
-				out.println("</li>");
-				count++;
+			if((format_flags & FORMATO_ITALICO) > 0){
+				out.print("</span>");
 			}
-		}
+
+			out.println("</li>");
+		}		
 
 		out.println("</ul>");
-		out.println(count + " produtos listados, de um total de " + produtos.size() + ".");
+		out.println(filteredProducts.size() + " produtos listados, de um total de " + produtos.size() + ".");
 		out.println("</body>");
 		out.println("</html>");
 
@@ -173,7 +151,6 @@ public class GeradorDeRelatorios {
 
 	public static void main(String [] args) {
 		if(args.length < 4){
-
 			System.out.println("Uso:");
 			System.out.println("\tjava " + GeradorDeRelatorios.class.getName() + " <algoritmo> <critério de ordenação> <critério de filtragem> <parâmetro de filtragem> <opções de formatação>");
 			System.out.println("Onde:");
@@ -203,20 +180,15 @@ public class GeradorDeRelatorios {
 		
 		// Cria os objetos estratégia utilizados pelo gerador de relatórios
 		ICriterion sortingCrit = getCriterionOf(opcao_criterio_ord);
-		ISortingStrategy sortingStrat = getSortingStrategyOf(opcao_algoritmo, sortingCrit);
+		ISortingAlgorithm sortingStrat = getSortingStrategyOf(opcao_algoritmo);
+		IFilter filter = getFilterOf(opcao_criterio_filtro, opcao_parametro_filtro);
 		
-		GeradorDeRelatorios gdr = new GeradorDeRelatorios(List.of(carregaProdutos()), 
-			sortingStrat,
-			sortingCrit,
-			opcao_criterio_filtro,
-			opcao_parametro_filtro,
-			formato 
-		);
+		List<Produto> produtos = List.of(carregaProdutos());
+		GeradorDeRelatorios gdr = new GeradorDeRelatorios(produtos, sortingStrat, sortingCrit, filter, formato);
 
-		try{
+		try {
 			gdr.geraRelatorio("saida.html");
-		}
-		catch(IOException e){
+		} catch(IOException e){
 			e.printStackTrace();
 		}
 	}
@@ -234,12 +206,24 @@ public class GeradorDeRelatorios {
 		}
 	}
 	
-	private static ISortingStrategy getSortingStrategyOf(String name, ICriterion criterion) {
+	private static ISortingAlgorithm getSortingStrategyOf(String name) {
 		switch(name) {
-			case ALG_INSERTIONSORT: return new InsertionSortStrategy(criterion);
-			case ALG_QUICKSORT: return new QuickSortStrategy(criterion);
+			case ALG_INSERTIONSORT: return new InsertionSortAlgorithm();
+			case ALG_QUICKSORT: return new QuickSortAlgorithm();
 			default:
 				throw new RuntimeException("Algoritmo invalido!");
+		}
+	}
+	
+	private static IFilter getFilterOf(String name, String... params) {
+		switch(name) {
+			case FILTRO_TODOS: return new AllFilter();
+			case FILTRO_ESTOQUE_MENOR_OU_IQUAL_A:
+				return new StockFilter(Integer.parseInt(params[0]));
+			case FILTRO_CATEGORIA_IGUAL_A:
+				return new CategoryFilter(params[0]);
+			default:
+				throw new RuntimeException("Filtro invalido!");	
 		}
 	}
 }

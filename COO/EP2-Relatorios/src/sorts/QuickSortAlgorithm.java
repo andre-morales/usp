@@ -1,22 +1,19 @@
 package sorts;
 
-import criteria.ICriterion;
 import gerador.Produto;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * @author Andre
  * @version 1.0
  */
-public class QuickSortStrategy implements ISortingStrategy {
-	private ICriterion criterion;
-	
-	public QuickSortStrategy(ICriterion criterion) {
-		this.criterion = criterion;
-	}
+public class QuickSortAlgorithm implements ISortingAlgorithm {
+	private Comparator<Produto> criterion;
 	
 	@Override
 	public void sort(List<Produto> produtos) {
+		if (criterion == null) throw new IllegalStateException("Critério de ordenação não definido!");
 		doSort(produtos, 0, produtos.size() - 1);
 	}
 
@@ -53,12 +50,12 @@ public class QuickSortStrategy implements ISortingStrategy {
 	}
 	
 	@Override
-	public void setCriterion(ICriterion criterion) {
+	public void setCriterion(Comparator<Produto> criterion) {
 		this.criterion = criterion;
 	}
 
 	@Override
-	public ICriterion getCriterion() {
+	public Comparator<Produto> getCriterion() {
 		return criterion;
 	}
 	

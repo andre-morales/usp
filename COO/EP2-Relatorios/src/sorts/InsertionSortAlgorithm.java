@@ -1,22 +1,20 @@
 package sorts;
 
-import criteria.ICriterion;
 import gerador.Produto;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * @author Andre
  * @version 1.0
  */
-public class InsertionSortStrategy implements ISortingStrategy {
-	private ICriterion criterion;
-	
-	public InsertionSortStrategy(ICriterion criterion) {
-		this.criterion = criterion;
-	}
+public class InsertionSortAlgorithm implements ISortingAlgorithm {
+	private Comparator<Produto> criterion;
 	
 	@Override
 	public void sort(List<Produto> produtos) {
+		if (criterion == null) throw new IllegalStateException("Critério de ordenação não definido!");
+		
 		var ini = 0;
 		var fim = produtos.size() - 1;
 		for(int i = 0; i <= fim; i++){
@@ -35,12 +33,12 @@ public class InsertionSortStrategy implements ISortingStrategy {
 	}
 
 	@Override
-	public void setCriterion(ICriterion criterion) {
+	public void setCriterion(Comparator<Produto> criterion) {
 		this.criterion = criterion;
 	}
 
 	@Override
-	public ICriterion getCriterion() {
+	public Comparator<Produto> getCriterion() {
 		return criterion;
 	}
 	
