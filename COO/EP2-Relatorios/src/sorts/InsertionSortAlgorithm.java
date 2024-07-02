@@ -15,8 +15,8 @@ public class InsertionSortAlgorithm implements ISortingAlgorithm {
 	public void sort(List<Produto> produtos) {
 		if (criterion == null) throw new IllegalStateException("Critério de ordenação não definido!");
 		
-		var ini = 0;
-		var fim = produtos.size() - 1;
+		int ini = 0;
+		int fim = produtos.size() - 1;
 		for(int i = 0; i <= fim; i++){
 			Produto x = produtos.get(i);				
 			int j = (i - 1);
