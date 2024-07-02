@@ -12,7 +12,6 @@ import java.util.List;
 
 public class GeradorDeRelatorios {
 	private List<Produto> produtos;
-	
 	private ISortingAlgorithm sortingAlgorithm;
 	private ICriterion sortingCriterion;
 	private IFilter filter;

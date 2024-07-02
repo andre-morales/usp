@@ -1,7 +1,7 @@
 package formatters;
 
 import gerador.Produto;
-import gerador.ProdutoColorido;
+import gerador.ProdutoEstilizado;
 import java.io.PrintWriter;
 
 /**
@@ -19,13 +19,13 @@ public class StyledFormatter implements IFormatter {
 	public void format(PrintWriter stream, Produto prod) {
 		// Se o produto não é um subtipo que permite estilização por produto, não aplique nenhuma
 		// outra formatação
-		if (!(prod instanceof ProdutoColorido)) {
+		if (!(prod instanceof ProdutoEstilizado)) {
 			base.format(stream, prod);
 			return;
 		}
 		
 		// Caso contrário, formate o produto.
-		ProdutoColorido pcol = (ProdutoColorido)prod;
+		ProdutoEstilizado pcol = (ProdutoEstilizado)prod;
 		
 		String italics = pcol.isItalico() ? "font-style:italic;" : "";
 		String bold    = pcol.isNegrito() ? "font-weight:bold;" : "";
