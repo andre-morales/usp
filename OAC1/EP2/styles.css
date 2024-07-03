@@ -3,6 +3,10 @@
   .pagebreak { page-break-before: always; margin: 0; padding: 0; } 
 }
 
+h1 {
+	margin-bottom: 0.1rem
+}
+
 /*Removes excessive padding from headers*/
 h2 {
   margin-top: 0.6rem;
@@ -25,4 +29,8 @@ p:has(> .imagex) {
   text-align: center;
   height: 65rem;
   overflow: hidden;
+}
+
+bold {
+	font-weight: bold;
 }

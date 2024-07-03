@@ -1,0 +1,35 @@
+
+Resumão:
+* O arquivo de memória é o sort.mem.
+* O algoritmo implementado é um Bubble Sort.
+* A primeira palavra é um jump e não deve ser alterada.
+* A segunda palavra é o tamanho do array a ordenar
+* A terceira palavra em diante são as palavras a serem ordenadas
+* O código em si começa apenas em 0x200 então você pode colocar mais números para ordenar se quiser.
+* Em anexo também estão:
+  - EP1 de referência com o emulador para executar o sort
+  - Código fonte em assembly proto do sort.
+  - Assembler que implementei para traduzir o código fonte sorting.asm ao arquivo .mem
+
+Texto Extendido:
+	Para criar o código do .mem, criei um assembler para traduzir os mnemônicos em palavras no formato .mem.
+O assembler foi feito em HTML5 e roda direto no navegador sem precisar de nenhum outro programa.
+Esse assembler foi crucial pois implementar o bubble sort em assembly sem labels, comentários e outras coisas
+em uma arquitetura tão enxuta provou ser quase impossível.
+
+	O código fonte do bubble sort está em sorting.asm. O código está comentado e possui labels, é possível ver o exemplo de
+ordenação com 20 palavras por padrão.
+
+O assembler gera o conteúdo do arquivo .mem pronto pra ser executado já.
+
+	Como exemplo de execução:
+	> ep sort.mem
+	  Roda o emulador com o arquivo de memória e espera comandos.
+	> memory 0x2 0x14
+	  Mostra as 20 palavras do array (na posição 2)
+	> continue
+	  Deixa o emulador executar até bater no halt final
+	> memory 0x2 0x14
+	  Mostra as 20 palavras agora ordenadas.
+	> continue
+	  Deixa o emulador terminar e devolver o controle para o driver.
