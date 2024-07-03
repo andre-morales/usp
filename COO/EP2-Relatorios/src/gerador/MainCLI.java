@@ -28,6 +28,9 @@ import sorts.QuickSortAlgorithm;
  * @version 1.0
  */
 public class MainCLI {
+	public static final String SHEET_PATH = "./produtos.csv";
+	public static final String OUTPUT_PATH = "saida.html";
+	
 	public static final String ALG_INSERTIONSORT = "quick";
 	public static final String ALG_QUICKSORT = "insertion";
 
@@ -77,7 +80,7 @@ public class MainCLI {
 		GeradorDeRelatorios gdr = new GeradorDeRelatorios(produtos, sortingStrat, sortingCrit, filter, formatter);
 
 		try {
-			gdr.geraRelatorio("saida.html");
+			gdr.geraRelatorio(OUTPUT_PATH);
 		} catch(IOException e){
 			System.err.println("ERRO NA GERAÇÃO DO RELATÓRIO: ");
 			e.printStackTrace();
@@ -99,7 +102,7 @@ public class MainCLI {
 	
 	public static Collection<Produto> carregaProdutos(){
 		//return DefaultProducts.get();
-		return SheetReader.readFrom("./produtos.csv");
+		return SheetReader.readFrom(SHEET_PATH);
 	} 
 	
 	/**

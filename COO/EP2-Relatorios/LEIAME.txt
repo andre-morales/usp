@@ -1,0 +1,7 @@
+Compilação:
+	make build
+	ou
+	javac -d output -cp "src;" src/gerador/MainCLI.java
+
+Execução:
+	java -cp "output;" gerador/MainCLI <argumentos>
