@@ -1,3 +1,6 @@
+Autores:
+André Morales de Oliveira Carneiro - 14558332
+João Pedro Ribeiro Barbosa - 14677248
 
 Resumão:
 * O arquivo de memória é o sort.mem.
